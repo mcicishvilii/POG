@@ -1,39 +1,49 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
   Image,
   TouchableOpacity,
   StyleSheet,
-  Button,
+  SafeAreaView,
+  Linking,
 } from "react-native";
 
-const App = () => {
+import { useRouter } from "expo-router";
+import * as Font from "expo-font";
+
+const loadFonts = async () => {
+  await Font.loadAsync({
+    SaqartveloFont: require("../assets/fonts/bpg_mrgvlovani_caps_2010.ttf"),
+    ProkuraturaFont: require("../assets/fonts/gl-tatishvili-12-normal.ttf"),
+  });
+};
+
+const FirstScreen = () => {
+  const router = useRouter();
   const [selectedButton, setSelectedButton] = useState(null);
+
+  const [fontsLoaded, setFontsLoaded] = useState(false);
+
+  useEffect(() => {
+    loadFonts().then(() => setFontsLoaded(true));
+  }, []);
+
+  if (!fontsLoaded) {
+    return null; // Render a loading screen while fonts are being loaded
+  }
 
   const handleButtonClick = (lang) => {
     setSelectedButton(lang);
   };
 
   const navigateToNewsScreen = () => {
-    // Navigate to news screen logic
-    alert("Navigate to news screen");
+    router.push("/news");
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.buttonRow}>
-        <TouchableOpacity
-          style={[
-            styles.button,
-            selectedButton === "en" ? styles.selectedButton : null,
-            selectedButton !== "en" ? styles.unselectedBorder : null,
-          ]}
-          onPress={() => handleButtonClick("en")}
-        >
-          <Text style={styles.buttonText}>en</Text>
-        </TouchableOpacity>
-
         <TouchableOpacity
           style={[
             styles.button,
@@ -43,6 +53,17 @@ const App = () => {
           onPress={() => handleButtonClick("ge")}
         >
           <Text style={styles.buttonText}>ge</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[
+            styles.button,
+            selectedButton === "en" ? styles.selectedButton : null,
+            selectedButton !== "en" ? styles.unselectedBorder : null,
+          ]}
+          onPress={() => handleButtonClick("en")}
+        >
+          <Text style={styles.buttonText}>en</Text>
         </TouchableOpacity>
       </View>
 
@@ -54,35 +75,35 @@ const App = () => {
             accessibilityLabel="main logo"
           />
         </TouchableOpacity>
-        <Text style={styles.text}>საქართველოს</Text>
-        <Text style={styles.text}>პროკურატურა</Text>
+        <Text style={styles.textSaqartvelos}>საქართველოს</Text>
+        <Text style={styles.textProkuratura}>პროკურატურა</Text>
       </View>
 
       <View style={styles.iconRow}>
         <Image
           style={styles.icon}
-          source={require("../assets/images/main-logo.png")}
-          accessibilityLabel="Facebook logo"
-        />
-        <Image
-          style={styles.icon}
-          source={require("../assets/images/main-logo.png")}
+          source={require("../assets/images/icons8-facebook-50.png")}
           accessibilityLabel="X logo"
         />
         <Image
           style={styles.icon}
-          source={require("../assets/images/main-logo.png")}
+          source={require("../assets/images/icons8-x-50.png")}
           accessibilityLabel="YouTube logo"
         />
+        <Image
+          style={styles.icon}
+          source={require("../assets/images/icons8-youtube-50.png")}
+          accessibilityLabel="Facebook logo"
+        />
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "rgba(143, 111, 111, 0.85)",
+    backgroundColor: "rgba(98, 143, 111, 0.85)",
     justifyContent: "space-between",
     padding: 0,
   },
@@ -92,8 +113,9 @@ const styles = StyleSheet.create({
     padding: 70,
   },
   button: {
+    width: 100,
     padding: 10,
-    borderRadius: 4,
+    borderRadius: 8,
     backgroundColor: "transparent",
     marginHorizontal: 5,
   },
@@ -105,7 +127,10 @@ const styles = StyleSheet.create({
     borderColor: "#FFCCA758",
   },
   buttonText: {
+    textTransform: "uppercase",
+    textAlign: "center",
     color: "white",
+    fontSize: 30,
   },
   logoContainer: {
     alignItems: "center",
@@ -117,16 +142,32 @@ const styles = StyleSheet.create({
   text: {
     textAlign: "center",
   },
+
+  textSaqartvelos: {
+    color: "white",
+    textAlign: "center",
+    fontFamily: "SaqartveloFont",
+    fontSize: 20,
+  },
+
+  textProkuratura: {
+    color: "white",
+    textAlign: "center",
+    fontFamily: "ProkuraturaFont",
+    fontSize: 45,
+  },
+
   iconRow: {
     flexDirection: "row",
     justifyContent: "center",
     paddingBottom: 30,
   },
   icon: {
-    width: 31,
-    height: 53,
-    marginHorizontal: 5,
+    width: 41,
+    height: 43,
+    marginHorizontal: 10,
+    marginBottom: 20,
   },
 });
 
-export default App;
+export default FirstScreen;
