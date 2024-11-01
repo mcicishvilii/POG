@@ -6,13 +6,18 @@ const newsItems = Array.from({ length: 20 }, (_, index) => ({
   title: `News Title ${index + 1}`,
   description: `This is a short description of news item ${index + 1}.`,
   date: `17 February 2024`,
-  image: require("../assets/images/main-logo.png"),
 }));
 
 const NewsFeedScreen = () => {
   const renderItem = ({ item }) => (
     <View style={styles.newsItem}>
-      <Image source={item.image} style={styles.newsImage} />
+      <Image
+        source={{
+          uri: "file:///absolute-path-to-your-project/assets/images/main-logo.png",
+        }}
+        style={{ width: 100, height: 100 }}
+      />
+
       <Text style={styles.newsTitle}>{item.title}</Text>
       <View style={styles.divider} />
       <Text style={styles.newsDescription}>{item.description}</Text>
