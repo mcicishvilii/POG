@@ -1,12 +1,27 @@
-import React from "react";
-import { Stack } from "expo-router";
+import { Drawer } from "expo-router/drawer";
+import { Text, View } from "react-native";
+import CustomDrawerContent from "./CustomDrawerContent";
 
-const App = () => {
+export default function DrawerLayout() {
   return (
-    <Stack>
-      <Stack.Screen name="news" options={{ headerShown: false }} />
-    </Stack>
+    <Drawer
+      defaultStatus="closed"
+      screenOptions={{
+        headerShown: true,
+        drawerStyle: {
+          backgroundColor: "white",
+          width: "70%",
+        },
+      }}
+      drawerContent={(props) => <CustomDrawerContent {...props} />}
+    >
+      <Drawer.Screen
+        name="news"
+        options={{
+          drawerLabel: "News",
+          title: "News",
+        }}
+      />
+    </Drawer>
   );
-};
-
-export default App;
+}
