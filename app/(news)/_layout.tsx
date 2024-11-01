@@ -7,7 +7,7 @@ export default function DrawerLayout() {
     <Drawer
       defaultStatus="closed"
       screenOptions={{
-        headerShown: false, // Changed this to false since you have a custom header
+        headerShown: false,
         drawerStyle: {
           backgroundColor: "white",
           width: "70%",
@@ -20,7 +20,7 @@ export default function DrawerLayout() {
         options={{
           drawerLabel: "News",
           title: "News",
-          headerShown: false, // Make sure this is false too
+          headerShown: false,
         }}
       />
     </Drawer>

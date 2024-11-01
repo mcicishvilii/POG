@@ -7,10 +7,13 @@ import {
   StyleSheet,
   SafeAreaView,
   Linking,
+  ActivityIndicator,
 } from "react-native";
 
+import "../i18n";
 import { useRouter } from "expo-router";
 import * as Font from "expo-font";
+import { useTranslation } from "react-i18next";
 
 const loadFonts = async () => {
   await Font.loadAsync({
@@ -23,6 +26,8 @@ const FirstScreen = () => {
   const router = useRouter();
   const [selectedButton, setSelectedButton] = useState(null);
 
+  const { t } = useTranslation();
+
   const [fontsLoaded, setFontsLoaded] = useState(false);
 
   useEffect(() => {
@@ -30,7 +35,7 @@ const FirstScreen = () => {
   }, []);
 
   if (!fontsLoaded) {
-    return null; // Render a loading screen while fonts are being loaded
+    return <ActivityIndicator size="large" color="#FFCCA7" />;
   }
 
   const handleButtonClick = (lang) => {
@@ -75,8 +80,10 @@ const FirstScreen = () => {
             accessibilityLabel="main logo"
           />
         </TouchableOpacity>
-        <Text style={styles.textSaqartvelos}>საქართველოს</Text>
-        <Text style={styles.textProkuratura}>პროკურატურა</Text>
+        <Text style={styles.textSaqartvelos}>
+          {t("home.welcome", { appName: t("appName") })}
+        </Text>
+        <Text style={styles.textProkuratura}>asdasd</Text>
       </View>
 
       <View style={styles.iconRow}>

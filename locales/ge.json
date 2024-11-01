@@ -1,0 +1,11 @@
+{
+    "appName": "პროკურატურა",
+    "navigation": {
+      "home": "Home",
+      "highScores": "High Scores",
+      "settings": "Settings"
+    },
+    "home": {
+      "welcome": "სალამი to %{appName}!"
+    }
+  }

@@ -1,0 +1,11 @@
+{
+    "appName": "prosecutors",
+    "navigation": {
+      "home": "Home",
+      "highScores": "High Scores",
+      "settings": "Settings"
+    },
+    "home": {
+      "welcome": "Welcome to %{appName}!"
+    }
+  }
