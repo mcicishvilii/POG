@@ -10,7 +10,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 
-import "../i18n";
+import i18n from "../i18n";
 import { useRouter } from "expo-router";
 import * as Font from "expo-font";
 import { useTranslation } from "react-i18next";
@@ -24,7 +24,7 @@ const loadFonts = async () => {
 
 const FirstScreen = () => {
   const router = useRouter();
-  const [selectedButton, setSelectedButton] = useState(null);
+  const [selectedButton, setSelectedButton] = useState("ge");
 
   const { t } = useTranslation();
 
@@ -40,6 +40,7 @@ const FirstScreen = () => {
 
   const handleButtonClick = (lang) => {
     setSelectedButton(lang);
+    i18n.changeLanguage(lang); // change language on button click
   };
 
   const navigateToNewsScreen = () => {
@@ -80,16 +81,14 @@ const FirstScreen = () => {
             accessibilityLabel="main logo"
           />
         </TouchableOpacity>
-        <Text style={styles.textSaqartvelos}>
-          {t("home.welcome", { appName: t("appName") })}
-        </Text>
-        <Text style={styles.textProkuratura}>asdasd</Text>
+        <Text style={styles.textSaqartvelos}>{t("mainText")}</Text>
+        <Text style={styles.textSaqartvelos}>{t("comainText")}</Text>
       </View>
 
       <View style={styles.iconRow}>
         <TouchableOpacity
           onPress={() =>
-            Linking.openURL("https://www.facebook.com/OfficialPOG/")
+            Linking.openURL("https://www.facebook.com/OfficialPOG /")
           }
         >
           <Image

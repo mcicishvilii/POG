@@ -30,6 +30,7 @@
     "expo-web-browser": "~13.0.3",
     "i18n-js": "^4.5.0",
     "i18next": "^23.16.4",
+    "intl-pluralrules": "^2.0.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-i18next": "^15.1.0",
