@@ -9,7 +9,6 @@ export default function CustomDrawerContent(props) {
 
   const handleSubmitEditing = (event) => {
     const query = event.nativeEvent.text;
-    // Navigate to the news screen with search params
     router.push({
       pathname: "/(news)/news",
       params: { searchQuery: query },

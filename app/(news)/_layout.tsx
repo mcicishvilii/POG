@@ -1,5 +1,5 @@
+// (news)/_layout.tsx
 import { Drawer } from "expo-router/drawer";
-import { Text, View } from "react-native";
 import CustomDrawerContent from "./CustomDrawerContent";
 
 export default function DrawerLayout() {
@@ -7,7 +7,7 @@ export default function DrawerLayout() {
     <Drawer
       defaultStatus="closed"
       screenOptions={{
-        headerShown: true,
+        headerShown: false, // Changed this to false since you have a custom header
         drawerStyle: {
           backgroundColor: "white",
           width: "70%",
@@ -20,6 +20,7 @@ export default function DrawerLayout() {
         options={{
           drawerLabel: "News",
           title: "News",
+          headerShown: false, // Make sure this is false too
         }}
       />
     </Drawer>
