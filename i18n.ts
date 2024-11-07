@@ -3,7 +3,6 @@ import { initReactI18next } from 'react-i18next';
 import 'intl-pluralrules';
 
 
-// Import your translations
 const resources = {
   en: {
     translation: {
@@ -23,11 +22,11 @@ i18n
   .use(initReactI18next)
   .init({
     resources,
-    lng: 'ge', // default language
+    lng: 'ge',
     fallbackLng: 'ge',
     
     interpolation: {
-      escapeValue: false // react already safes from xss
+      escapeValue: false
     }
   });
 

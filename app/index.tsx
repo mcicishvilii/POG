@@ -9,7 +9,7 @@ import {
   Linking,
   ActivityIndicator,
 } from "react-native";
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import i18n from "../i18n";
 import { useRouter } from "expo-router";
 import * as Font from "expo-font";
@@ -25,27 +25,26 @@ const loadFonts = async () => {
 const FirstScreen = () => {
   const router = useRouter();
   const [selectedButton, setSelectedButton] = useState("ge");
-
   const { t } = useTranslation();
-
   const [fontsLoaded, setFontsLoaded] = useState(false);
 
   useEffect(() => {
     loadFonts().then(() => setFontsLoaded(true));
   }, []);
 
-  if (!fontsLoaded) {
-    return <ActivityIndicator size="large" color="#FFCCA7" />;
-  }
-
-  const handleButtonClick = (lang) => {
+  const handleButtonClick = async (lang) => {
     setSelectedButton(lang);
     i18n.changeLanguage(lang); // change language on button click
+    await AsyncStorage.setItem("selectedLanguage", lang); // save language to AsyncStorage
   };
 
   const navigateToNewsScreen = () => {
     router.push("/news");
   };
+
+  if (!fontsLoaded) {
+    return <ActivityIndicator size="large" color="#FFCCA7" />;
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -60,7 +59,6 @@ const FirstScreen = () => {
         >
           <Text style={styles.buttonText}>ge</Text>
         </TouchableOpacity>
-
         <TouchableOpacity
           style={[
             styles.button,
