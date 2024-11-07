@@ -18,41 +18,49 @@ export default function NewsFeedScreen() {
   const { searchQuery } = useLocalSearchParams();
   const [newsItems, setNewsItems] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedLanguage, setSelectedLanguage] = useState("en"); // Default to "en" or whatever is your default
+  const [selectedLanguage, setSelectedLanguage] = useState("en");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
 
   useEffect(() => {
     const fetchSelectedLanguage = async () => {
       const lang = await AsyncStorage.getItem("selectedLanguage");
-      setSelectedLanguage(lang || "en"); // fallback to "en" if no language is saved
+      setSelectedLanguage(lang || "en");
     };
 
     fetchSelectedLanguage();
   }, []);
 
+  const fetchNews = async (page = 1) => {
+    try {
+      setLoading(true);
+      const response = await fetch(
+        `https://dev.proservice.ge/pog.ge/api/news.php?page=${page}`
+      );
+      const json = await response.json();
+
+      const filteredNews = json.data.filter(
+        (item) => item.lang === (selectedLanguage === "ge" ? "geo" : "eng")
+      );
+
+      setTotalPages(parseInt(json.pagination.total_pages));
+      setNewsItems(filteredNews);
+    } catch (error) {
+      console.error("Error fetching news:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    // Fetch news data from the API
-    const fetchNews = async () => {
-      try {
-        const response = await fetch(
-          "https://dev.proservice.ge/pog.ge/api/news.php"
-        );
-        const json = await response.json();
-
-        // Filter news items by the selected language
-        const filteredNews = json.data.filter(
-          (item) => item.lang === (selectedLanguage === "ge" ? "geo" : "eng")
-        );
-
-        setNewsItems(filteredNews);
-      } catch (error) {
-        console.error("Error fetching news:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchNews();
+    setCurrentPage(1);
+    fetchNews(1);
   }, [selectedLanguage]);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    fetchNews(page);
+  };
 
   const filteredNews = searchQuery
     ? newsItems.filter(
@@ -61,6 +69,46 @@ export default function NewsFeedScreen() {
           item.text.toLowerCase().includes(searchQuery.toLowerCase())
       )
     : newsItems;
+
+  const Pagination = () => {
+    const pages = [];
+    for (let i = 1; i <= totalPages; i++) {
+      pages.push(
+        <TouchableOpacity
+          key={i}
+          onPress={() => handlePageChange(i)}
+          style={[
+            styles.pageButton,
+            currentPage === i && styles.pageButtonActive,
+          ]}
+        >
+          <Text style={styles.pageText}>{i}</Text>
+        </TouchableOpacity>
+      );
+    }
+
+    return (
+      <View style={styles.paginationContainer}>
+        <TouchableOpacity
+          onPress={() => currentPage > 1 && handlePageChange(currentPage - 1)}
+          disabled={currentPage === 1}
+        >
+          <Ionicons name="arrow-back" size={24} color="#000" />
+        </TouchableOpacity>
+
+        <View style={styles.pageNumbers}>{pages.slice(0, 10)}</View>
+
+        <TouchableOpacity
+          onPress={() =>
+            currentPage < totalPages && handlePageChange(currentPage + 1)
+          }
+          disabled={currentPage === totalPages}
+        >
+          <Ionicons name="arrow-forward" size={24} color="#000" />
+        </TouchableOpacity>
+      </View>
+    );
+  };
 
   const renderItem = ({ item }) => (
     <View style={styles.newsItem}>
@@ -97,8 +145,9 @@ export default function NewsFeedScreen() {
       <FlatList
         data={filteredNews}
         renderItem={renderItem}
-        keyExtractor={(item) => item.rec_id}
+        keyExtractor={(item, index) => `${item.rec_id}-${index}`}
         contentContainerStyle={styles.listContainer}
+        ListFooterComponent={<Pagination />}
       />
     </View>
   );
@@ -165,5 +214,29 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontWeight: "bold",
     textTransform: "uppercase",
+  },
+  paginationContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 16,
+  },
+  pageNumbers: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
+  },
+  pageButton: {
+    padding: 8,
+    borderRadius: 4,
+    marginHorizontal: 2,
+    backgroundColor: "#e0e0e0",
+  },
+  pageButtonActive: {
+    backgroundColor: "#6200ea",
+  },
+  pageText: {
+    fontSize: 14,
+    color: "white",
   },
 });
