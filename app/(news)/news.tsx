@@ -72,17 +72,36 @@ export default function NewsFeedScreen() {
 
   const Pagination = () => {
     const pages = [];
-    for (let i = 1; i <= totalPages; i++) {
+    const maxDisplayedPages = 5; // Show only 5 pages at a time
+    const halfMaxPages = Math.floor(maxDisplayedPages / 2);
+
+    // Calculate the range of pages to display around the current page
+    let startPage = Math.max(1, currentPage - halfMaxPages);
+    let endPage = Math.min(totalPages, currentPage + halfMaxPages);
+
+    // Adjust the range if we are close to the beginning or the end of pages
+    if (currentPage <= halfMaxPages) {
+      endPage = Math.min(totalPages, maxDisplayedPages);
+    } else if (currentPage + halfMaxPages >= totalPages) {
+      startPage = Math.max(1, totalPages - maxDisplayedPages + 1);
+    }
+
+    // Populate the pages array for rendering
+    for (let i = startPage; i <= endPage; i++) {
       pages.push(
         <TouchableOpacity
           key={i}
           onPress={() => handlePageChange(i)}
-          style={[
-            styles.pageButton,
-            currentPage === i && styles.pageButtonActive,
-          ]}
+          style={styles.pageButton}
         >
-          <Text style={styles.pageText}>{i}</Text>
+          <Text
+            style={[
+              styles.pageText,
+              currentPage === i && styles.pageTextActive, // Apply active color
+            ]}
+          >
+            {i}
+          </Text>
         </TouchableOpacity>
       );
     }
@@ -92,19 +111,21 @@ export default function NewsFeedScreen() {
         <TouchableOpacity
           onPress={() => currentPage > 1 && handlePageChange(currentPage - 1)}
           disabled={currentPage === 1}
+          style={styles.arrowButton}
         >
-          <Ionicons name="arrow-back" size={24} color="#000" />
+          <Ionicons name="arrow-back" size={20} style={styles.arrowIcon} />
         </TouchableOpacity>
 
-        <View style={styles.pageNumbers}>{pages.slice(0, 10)}</View>
+        <View style={styles.pageNumbers}>{pages}</View>
 
         <TouchableOpacity
           onPress={() =>
             currentPage < totalPages && handlePageChange(currentPage + 1)
           }
           disabled={currentPage === totalPages}
+          style={styles.arrowButton}
         >
-          <Ionicons name="arrow-forward" size={24} color="#000" />
+          <Ionicons name="arrow-forward" size={20} style={styles.arrowIcon} />
         </TouchableOpacity>
       </View>
     );
@@ -221,6 +242,17 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     padding: 16,
   },
+
+  arrowIcon: {
+    color: "#FFFFFF", // White color for the arrow icons
+  },
+
+  arrowButton: {
+    backgroundColor: "#d3d3d3", // Light gray background
+    borderRadius: 20, // Make the button circular
+    padding: 8,
+    marginHorizontal: 8,
+  },
   pageNumbers: {
     flexDirection: "row",
     alignItems: "center",
@@ -228,15 +260,14 @@ const styles = StyleSheet.create({
   },
   pageButton: {
     padding: 8,
-    borderRadius: 4,
     marginHorizontal: 2,
-    backgroundColor: "#e0e0e0",
   },
-  pageButtonActive: {
-    backgroundColor: "#6200ea",
+  pageTextActive: {
+    fontSize: 16,
+    color: "#628F6F", // Active page color
   },
   pageText: {
-    fontSize: 14,
-    color: "white",
+    fontSize: 16,
+    color: "#929395", // Customize color as desired
   },
 });
