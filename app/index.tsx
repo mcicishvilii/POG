@@ -34,8 +34,8 @@ const FirstScreen = () => {
 
   const handleButtonClick = async (lang) => {
     setSelectedButton(lang);
-    i18n.changeLanguage(lang); // change language on button click
-    await AsyncStorage.setItem("selectedLanguage", lang); // save language to AsyncStorage
+    i18n.changeLanguage(lang);
+    await AsyncStorage.setItem("selectedLanguage", lang);
   };
 
   const navigateToNewsScreen = () => {

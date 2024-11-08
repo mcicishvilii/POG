@@ -9,11 +9,13 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from "react-native";
+import { useRouter } from "expo-router";
 import { useNavigation } from "@react-navigation/native";
 import { useLocalSearchParams } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function NewsFeedScreen() {
+  const router = useRouter();
   const navigation = useNavigation();
   const { searchQuery } = useLocalSearchParams();
   const [newsItems, setNewsItems] = useState([]);
@@ -30,6 +32,10 @@ export default function NewsFeedScreen() {
 
     fetchSelectedLanguage();
   }, []);
+
+  const navigateToNewsDetails = (recId) => {
+    router.push(`/news-details/${recId}`);
+  };
 
   const fetchNews = async (page = 1) => {
     try {
@@ -72,21 +78,18 @@ export default function NewsFeedScreen() {
 
   const Pagination = () => {
     const pages = [];
-    const maxDisplayedPages = 5; // Show only 5 pages at a time
+    const maxDisplayedPages = 5;
     const halfMaxPages = Math.floor(maxDisplayedPages / 2);
 
-    // Calculate the range of pages to display around the current page
     let startPage = Math.max(1, currentPage - halfMaxPages);
     let endPage = Math.min(totalPages, currentPage + halfMaxPages);
 
-    // Adjust the range if we are close to the beginning or the end of pages
     if (currentPage <= halfMaxPages) {
       endPage = Math.min(totalPages, maxDisplayedPages);
     } else if (currentPage + halfMaxPages >= totalPages) {
       startPage = Math.max(1, totalPages - maxDisplayedPages + 1);
     }
 
-    // Populate the pages array for rendering
     for (let i = startPage; i <= endPage; i++) {
       pages.push(
         <TouchableOpacity
@@ -97,7 +100,7 @@ export default function NewsFeedScreen() {
           <Text
             style={[
               styles.pageText,
-              currentPage === i && styles.pageTextActive, // Apply active color
+              currentPage === i && styles.pageTextActive,
             ]}
           >
             {i}
@@ -132,15 +135,16 @@ export default function NewsFeedScreen() {
   };
 
   const renderItem = ({ item }) => (
-    <View style={styles.newsItem}>
-      <Image
-        source={{ uri: `https://dev.proservice.ge/pog.ge/${item.img}` }}
-        style={styles.newsImage}
-      />
-      <Text style={styles.newsTitle}>{item.title}</Text>
-      <View style={styles.divider} />
-      <Text style={styles.newsDate}>{item.date}</Text>
-    </View>
+    <TouchableOpacity onPress={() => navigateToNewsDetails(item.rec_id)}>
+      <View style={styles.newsItem}>
+        <Image
+          source={{ uri: `https://dev.proservice.ge/pog.ge/${item.img}` }}
+          style={styles.newsImage}
+        />
+        <Text style={styles.newsTitle}>{item.title}</Text>
+        <Text style={styles.newsDate}>{item.date}</Text>
+      </View>
+    </TouchableOpacity>
   );
 
   if (loading) {
@@ -244,12 +248,12 @@ const styles = StyleSheet.create({
   },
 
   arrowIcon: {
-    color: "#FFFFFF", // White color for the arrow icons
+    color: "#FFFFFF",
   },
 
   arrowButton: {
-    backgroundColor: "#d3d3d3", // Light gray background
-    borderRadius: 20, // Make the button circular
+    backgroundColor: "#d3d3d3",
+    borderRadius: 20,
     padding: 8,
     marginHorizontal: 8,
   },
@@ -264,10 +268,10 @@ const styles = StyleSheet.create({
   },
   pageTextActive: {
     fontSize: 16,
-    color: "#628F6F", // Active page color
+    color: "#628F6F",
   },
   pageText: {
     fontSize: 16,
-    color: "#929395", // Customize color as desired
+    color: "#929395",
   },
 });
