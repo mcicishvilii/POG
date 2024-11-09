@@ -13,6 +13,8 @@ import { useRouter } from "expo-router";
 import { useNavigation } from "@react-navigation/native";
 import { useLocalSearchParams } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import CustomTextWithUnderline from "../../components/CustomTextWithUnderline";
+import CustomDivider from "@/components/CustomDivider";
 
 export default function NewsFeedScreen() {
   const router = useRouter();
@@ -142,6 +144,7 @@ export default function NewsFeedScreen() {
           style={styles.newsImage}
         />
         <Text style={styles.newsTitle}>{item.title}</Text>
+        <CustomDivider />
         <Text style={styles.newsDate}>{item.date}</Text>
       </View>
     </TouchableOpacity>
@@ -167,6 +170,8 @@ export default function NewsFeedScreen() {
           </Text>
         ) : null}
       </View>
+      <CustomTextWithUnderline />
+
       <FlatList
         data={filteredNews}
         renderItem={renderItem}
@@ -239,6 +244,8 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontWeight: "bold",
     textTransform: "uppercase",
+    color: "#628F6F",
+    fontFamily: "ProkuraturaFont",
   },
   paginationContainer: {
     flexDirection: "row",
