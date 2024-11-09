@@ -13,6 +13,7 @@ import {
   ScrollView,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import HTMLView from "react-native-htmlview";
 
 const NewsDetailsScreen = () => {
   const { recId } = useLocalSearchParams();
@@ -88,7 +89,10 @@ const NewsDetailsScreen = () => {
         />
         <Text style={styles.title}>{newsDetails.title}</Text>
         <Text style={styles.date}>{newsDetails.date}</Text>
-        <Text style={styles.text}>{newsDetails.text}</Text>
+
+        <HTMLView value={newsDetails.text} stylesheet={styles} />
+
+        {/* <Text style={styles.text}>{newsDetails.text}</Text> */}
 
         <TouchableOpacity
           onPress={() => router.back()}
