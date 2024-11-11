@@ -10,7 +10,7 @@ export default function DrawerLayout() {
         headerShown: false,
         drawerStyle: {
           backgroundColor: "white",
-          width: "70%",
+          width: "100%",
         },
       }}
       drawerContent={(props) => <CustomDrawerContent {...props} />}

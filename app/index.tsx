@@ -14,6 +14,7 @@ import i18n from "../i18n";
 import { useRouter } from "expo-router";
 import * as Font from "expo-font";
 import { useTranslation } from "react-i18next";
+import SocialIconsRow from "@/components/SocialIconsRow";
 
 const loadFonts = async () => {
   await Font.loadAsync({
@@ -83,43 +84,7 @@ const FirstScreen = () => {
         <Text style={styles.textSaqartvelos}>{t("comainText")}</Text>
       </View>
 
-      <View style={styles.iconRow}>
-        <TouchableOpacity
-          onPress={() =>
-            Linking.openURL("https://www.facebook.com/OfficialPOG /")
-          }
-        >
-          <Image
-            style={styles.icon}
-            source={require("../assets/images/icons8-facebook-50.png")}
-            accessibilityLabel="Facebook logo"
-          />
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          onPress={() => Linking.openURL("https://x.com/OfficialPOG?mx=2")}
-        >
-          <Image
-            style={styles.icon}
-            source={require("../assets/images/icons8-x-50.png")}
-            accessibilityLabel="X logo"
-          />
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          onPress={() =>
-            Linking.openURL(
-              "https://www.youtube.com/channel/UC8rnaboNC0B1NgBNGWhRl1A?view_as=subscriber"
-            )
-          }
-        >
-          <Image
-            style={styles.icon}
-            source={require("../assets/images/icons8-youtube-50.png")}
-            accessibilityLabel="YouTube logo"
-          />
-        </TouchableOpacity>
-      </View>
+      <SocialIconsRow />
     </SafeAreaView>
   );
 };

@@ -24,6 +24,7 @@ const styles = StyleSheet.create({
   customUnderline: {
     width: "10%",
     height: 3,
+    marginBottom: 25,
     backgroundColor: "#B89B5E",
     marginTop: -5,
   },

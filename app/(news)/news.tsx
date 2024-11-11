@@ -15,6 +15,7 @@ import { useLocalSearchParams } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import CustomTextWithUnderline from "../../components/CustomTextWithUnderline";
 import CustomDivider from "@/components/CustomDivider";
+import HTMLView from "react-native-htmlview";
 
 export default function NewsFeedScreen() {
   const router = useRouter();
@@ -25,6 +26,17 @@ export default function NewsFeedScreen() {
   const [selectedLanguage, setSelectedLanguage] = useState("en");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
+
+  const truncateText = (htmlText, maxChars = 70) => {
+    if (!htmlText) {
+      return ""; // Return an empty string if htmlText is null or undefined
+    }
+
+    const plainText = htmlText.replace(/<[^>]+>/g, ""); // Remove HTML tags for character limit
+    return plainText.length > maxChars
+      ? plainText.slice(0, maxChars) + "..."
+      : plainText;
+  };
 
   useEffect(() => {
     const fetchSelectedLanguage = async () => {
@@ -47,10 +59,13 @@ export default function NewsFeedScreen() {
       );
       const json = await response.json();
 
+      console.log("All News Items:", json.data); // Log all news items before filtering
+
       const filteredNews = json.data.filter(
         (item) => item.lang === (selectedLanguage === "ge" ? "geo" : "eng")
       );
 
+      console.log("Filtered News Items:", filteredNews); // Check the result after filtering
       setTotalPages(parseInt(json.pagination.total_pages));
       setNewsItems(filteredNews);
     } catch (error) {
@@ -143,8 +158,11 @@ export default function NewsFeedScreen() {
           source={{ uri: `https://dev.proservice.ge/pog.ge/${item.img}` }}
           style={styles.newsImage}
         />
-        <Text style={styles.newsTitle}>{item.title}</Text>
+        <Text style={styles.newsTitle}>
+          {item.title || "No Title Available"}
+        </Text>
         <CustomDivider />
+        <HTMLView value={`<p>${truncateText(item.text, 100)}</p>`} />
         <Text style={styles.newsDate}>{item.date}</Text>
       </View>
     </TouchableOpacity>
@@ -241,6 +259,7 @@ const styles = StyleSheet.create({
     marginVertical: 8,
   },
   newsDate: {
+    marginTop: 32,
     textAlign: "center",
     fontWeight: "bold",
     textTransform: "uppercase",
