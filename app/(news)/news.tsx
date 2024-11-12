@@ -15,6 +15,7 @@ import { useLocalSearchParams } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import CustomTextWithUnderline from "../../components/CustomTextWithUnderline";
 import CustomDivider from "@/components/CustomDivider";
+import HeaderForList from "@/components/HeaderForList";
 import HTMLView from "react-native-htmlview";
 import { useDrawer } from "./news-details/DrawerContext";
 
@@ -187,13 +188,13 @@ export default function NewsFeedScreen() {
           </Text>
         ) : null}
       </View>
-      <CustomTextWithUnderline />
 
       <FlatList
         data={filteredNews}
         renderItem={renderItem}
         keyExtractor={(item, index) => `${item.rec_id}-${index}`}
         contentContainerStyle={styles.listContainer}
+        ListHeaderComponent={<HeaderForList />}
         ListFooterComponent={<Pagination />}
       />
     </View>
