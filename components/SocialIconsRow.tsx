@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
   iconRow: {
     flexDirection: "row",
     justifyContent: "center",
-    paddingBottom: 30,
+    paddingBottom: 6,
   },
   icon: {
     width: 41,

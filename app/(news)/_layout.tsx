@@ -42,7 +42,7 @@ export default function DrawerLayout() {
               top: 0,
               left: 0,
               right: 0,
-              height: "90%",
+              height: "100%",
               backgroundColor: "white",
               borderBottomLeftRadius: 20,
               borderBottomRightRadius: 20,
