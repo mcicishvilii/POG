@@ -1,17 +1,12 @@
-import React from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-  Image,
-} from "react-native";
-import { DrawerContentScrollView } from "@react-navigation/drawer";
-import { useRouter } from "expo-router";
-import SocialIconsRow from "@/components/SocialIconsRow";
+interface CustomDrawerContentProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
 
-export default function CustomDrawerContent(props) {
+export default function CustomDrawerContent({
+  isOpen,
+  onClose,
+}: CustomDrawerContentProps) {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = React.useState("");
 
@@ -21,20 +16,17 @@ export default function CustomDrawerContent(props) {
       pathname: "/(news)/news",
       params: { searchQuery: query },
     });
-    props.navigation.closeDrawer();
+    onClose();
   };
 
   const navigateToNews = () => {
     router.push("/(news)/news");
-    props.navigation.closeDrawer();
+    onClose();
   };
 
   return (
     <View style={styles.outerContainer}>
-      <DrawerContentScrollView
-        {...props}
-        contentContainerStyle={styles.container}
-      >
+      <View style={styles.container}>
         <View style={styles.row1}>
           <Image
             source={require("../../assets/images/main-logo.png")}
@@ -45,7 +37,7 @@ export default function CustomDrawerContent(props) {
             <Text style={styles.mainTitle}>Sample Title</Text>
             <Text style={styles.subTitle}>Subtitle text here</Text>
           </View>
-          <TouchableOpacity onPress={() => props.navigation.closeDrawer()}>
+          <TouchableOpacity onPress={onClose}>
             <Text style={styles.closeButton}>☰</Text>
           </TouchableOpacity>
         </View>
@@ -69,10 +61,23 @@ export default function CustomDrawerContent(props) {
         <TouchableOpacity onPress={navigateToNews} style={styles.newsLink}>
           <Text style={styles.newsText}>სიახლეები</Text>
         </TouchableOpacity>
-      </DrawerContentScrollView>
+      </View>
     </View>
   );
 }
+
+import React from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  Image,
+} from "react-native";
+import { DrawerContentScrollView } from "@react-navigation/drawer";
+import { useRouter } from "expo-router";
+import SocialIconsRow from "@/components/SocialIconsRow";
 
 const styles = StyleSheet.create({
   outerContainer: {

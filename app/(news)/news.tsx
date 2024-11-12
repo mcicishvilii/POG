@@ -16,6 +16,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import CustomTextWithUnderline from "../../components/CustomTextWithUnderline";
 import CustomDivider from "@/components/CustomDivider";
 import HTMLView from "react-native-htmlview";
+import { useDrawer } from "./news-details/DrawerContext";
 
 export default function NewsFeedScreen() {
   const router = useRouter();
@@ -25,6 +26,7 @@ export default function NewsFeedScreen() {
   const [loading, setLoading] = useState(true);
   const [selectedLanguage, setSelectedLanguage] = useState("en");
   const [currentPage, setCurrentPage] = useState(1);
+  const { setIsOpen } = useDrawer();
   const [totalPages, setTotalPages] = useState(0);
 
   const truncateText = (htmlText, maxChars = 70) => {
@@ -179,7 +181,7 @@ export default function NewsFeedScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.toggleDrawer()}>
+        <TouchableOpacity onPress={() => setIsOpen(true)}>
           <Ionicons name="menu" size={24} color="black" />
         </TouchableOpacity>
         {searchQuery ? (
