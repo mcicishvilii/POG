@@ -34,7 +34,6 @@ export default function NewsFeedScreen() {
     if (!htmlText) {
       return "";
     }
-
     const plainText = htmlText.replace(/<[^>]+>/g, "");
     return plainText.length > maxChars
       ? plainText.slice(0, maxChars) + "..."
@@ -46,7 +45,6 @@ export default function NewsFeedScreen() {
       const lang = await AsyncStorage.getItem("selectedLanguage");
       setSelectedLanguage(lang || "en");
     };
-
     fetchSelectedLanguage();
   }, []);
 
@@ -57,17 +55,18 @@ export default function NewsFeedScreen() {
   const fetchNews = async (page = 1) => {
     try {
       setLoading(true);
-      const response = await fetch(
-        `https://dev.proservice.ge/pog.ge/api/news.php?page=${page}`
-      );
+
+      // Determine API endpoint based on selected language
+      const endpoint =
+        selectedLanguage === "ge"
+          ? "https://dev.proservice.ge/pog.ge/api/news.php"
+          : "https://dev.proservice.ge/pog.ge/api/news_en.php";
+
+      const response = await fetch(`${endpoint}?page=${page}`);
       const json = await response.json();
 
-      const filteredNews = json.data.filter(
-        (item) => item.lang === (selectedLanguage === "ge" ? "geo" : "eng")
-      );
-
-      setTotalPages(parseInt(json.pagination.total_pages));
-      setNewsItems(filteredNews);
+      setTotalPages(parseInt(json.pagination.total_pages, 10));
+      setNewsItems(json.data);
     } catch (error) {
       console.error("Error fetching news:", error);
     } finally {
