@@ -11,22 +11,14 @@ import {
 import { useTranslation } from "react-i18next";
 import { useRouter } from "expo-router";
 import SocialIconsRow from "@/components/SocialIconsRow";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import i18n from "../../i18n";
 import * as Font from "expo-font";
-import { Ionicons } from "@expo/vector-icons"; // Import Ionicons or another icon set
+import { Ionicons } from "@expo/vector-icons";
+import HeaderRow from "@/components/HeaderRow";
 
 interface CustomDrawerContentProps {
   isOpen: boolean;
   onClose: () => void;
 }
-
-const loadFonts = async () => {
-  await Font.loadAsync({
-    SaqartveloFont: require("../../assets/fonts/bpg_mrgvlovani_caps_2010.ttf"),
-    ProkuraturaFont: require("../../assets/fonts/gl-tatishvili-12-normal.ttf"),
-  });
-};
 
 export default function CustomDrawerContent({
   isOpen,
@@ -34,13 +26,7 @@ export default function CustomDrawerContent({
 }: CustomDrawerContentProps) {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = React.useState("");
-  const [selectedButton, setSelectedButton] = useState("ge");
   const { t } = useTranslation();
-  const [fontsLoaded, setFontsLoaded] = useState(false);
-
-  useEffect(() => {
-    loadFonts().then(() => setFontsLoaded(true));
-  }, []);
 
   const handleSubmitEditing = (event) => {
     const query = event.nativeEvent.text;
@@ -65,23 +51,12 @@ export default function CustomDrawerContent({
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.outerContainer}>
         <View style={styles.container}>
-          <View style={styles.row1}>
-            <TouchableOpacity onPress={navigateToIndex}>
-              <Image
-                source={require("../../assets/images/main-logo.png")}
-                style={styles.logo}
-              />
-            </TouchableOpacity>
-
-            <View style={styles.titleContainer}>
-              <Text style={styles.textSaqartvelos}>{t("mainText")}</Text>
-              <Text style={styles.textProkuratura}>{t("comainText")}</Text>
-            </View>
-            <TouchableOpacity onPress={onClose}>
-              <Text style={styles.closeButton}>☰</Text>
-            </TouchableOpacity>
-          </View>
-
+          <HeaderRow
+            onLogoPress={navigateToIndex}
+            onClosePress={onClose}
+            mainText={t("mainText")}
+            subText={t("comainText")}
+          />
           <View style={styles.row2}>
             <SocialIconsRow />
             <View style={styles.languageButtons}>

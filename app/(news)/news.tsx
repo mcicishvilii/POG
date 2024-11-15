@@ -1,3 +1,4 @@
+import HeaderRow from "@/components/HeaderRow"; // Import the HeaderRow component
 import Ionicons from "@expo/vector-icons/Ionicons";
 import React, { useEffect, useState } from "react";
 import {
@@ -56,7 +57,6 @@ export default function NewsFeedScreen() {
     try {
       setLoading(true);
 
-      // Determine API endpoint based on selected language
       const endpoint =
         selectedLanguage === "ge"
           ? "https://dev.proservice.ge/pog.ge/api/news.php"
@@ -177,16 +177,14 @@ export default function NewsFeedScreen() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => setIsOpen(true)}>
-          <Ionicons name="menu" size={24} color="black" />
-        </TouchableOpacity>
-        {searchQuery ? (
-          <Text style={styles.searchInfo}>
-            Search results for: {searchQuery}
-          </Text>
-        ) : null}
-      </View>
+      <View style={styles.justPadding}></View>
+
+      <HeaderRow
+        onLogoPress={() => router.push("/")}
+        onClosePress={() => setIsOpen(true)}
+        mainText="News Portal"
+        subText="News Portal"
+      />
 
       <FlatList
         data={filteredNews}
@@ -203,20 +201,12 @@ export default function NewsFeedScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 36,
-    paddingHorizontal: 16,
   },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 16,
-    gap: 16,
+  justPadding: {
+    backgroundColor: "#608d77",
+    paddingBottom: 16,
   },
-  searchInfo: {
-    fontSize: 14,
-    color: "#666",
-    flex: 1,
-  },
+
   listContainer: {
     paddingBottom: 16,
   },

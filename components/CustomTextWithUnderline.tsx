@@ -19,6 +19,7 @@ const styles = StyleSheet.create({
     fontFamily: "SaqartveloFont",
     lineHeight: 22,
     marginBottom: 5,
+    marginTop: 64,
     textAlign: "center",
   },
   customUnderline: {
