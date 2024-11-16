@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   View,
   Text,
@@ -6,15 +6,49 @@ import {
   StyleSheet,
   TouchableOpacity,
   Alert,
+  Dimensions,
   ActivityIndicator,
+  LayoutAnimation,
+  UIManager,
+  Platform,
+  SafeAreaView,
 } from "react-native";
 import HTMLView from "react-native-htmlview";
 import CustomTextWithUnderline from "./CustomTextWithUnderline";
+
+if (
+  Platform.OS === "android" &&
+  UIManager.setLayoutAnimationEnabledExperimental
+) {
+  UIManager.setLayoutAnimationEnabledExperimental(true);
+}
 
 const HeaderForList = () => {
   const [newsData, setNewsData] = useState([]);
   const [selectedNewsIndex, setSelectedNewsIndex] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [overlayVisible, setOverlayVisible] = useState(false);
+  const [overlayPosition, setOverlayPosition] = useState({ x: 0, y: 0 });
+  const hornButtonRef = useRef(null);
+
+  const handleButtonPress = () => {
+    if (overlayVisible) {
+      setOverlayVisible(false);
+      return;
+    }
+
+    hornButtonRef.current.measure((fx, fy, width, height, px, py) => {
+      console.log("Measurements:", fx, fy, width, height, px, py);
+      const overlayWidth = 200; // Width of overlay
+      const overlayHeight = 200; // Height of overlay
+
+      const safeX = px - overlayWidth / 2 + width / 2;
+      const safeY = py - overlayHeight / 2;
+
+      setOverlayPosition({ x: safeX, y: safeY });
+      setOverlayVisible(true);
+    });
+  };
 
   const truncateText = (htmlText, maxChars = 70) => {
     if (!htmlText) {
@@ -46,10 +80,6 @@ const HeaderForList = () => {
     fetchNews();
   }, []);
 
-  const showAlert = () => {
-    Alert.alert("Alert", "Horn button pressed!");
-  };
-
   if (loading) {
     return (
       <View style={styles.loaderContainer}>
@@ -70,9 +100,31 @@ const HeaderForList = () => {
             }}
             style={styles.image}
           />
-          <TouchableOpacity style={styles.hornButton} onPress={showAlert}>
+          <TouchableOpacity
+            ref={hornButtonRef}
+            style={styles.hornButton}
+            onPress={handleButtonPress}
+          >
             <Text style={styles.hornText}>📢</Text>
           </TouchableOpacity>
+
+          {overlayVisible && (
+            <View
+              style={[
+                styles.overlay,
+                {
+                  top: overlayPosition.y,
+                  left: overlayPosition.x,
+                },
+              ]}
+            >
+              <Image
+                source={{ uri: "https://via.placeholder.com/50" }}
+                style={styles.overlayImage}
+              />
+              <Text style={styles.overlayText}>Overlay Text</Text>
+            </View>
+          )}
         </View>
 
         <Text style={styles.simpleText}>ვიდეო</Text>
@@ -116,6 +168,24 @@ const styles = StyleSheet.create({
     backgroundColor: "#608d77",
     marginBottom: 20,
   },
+  container: { justifyContent: "center", alignItems: "center" },
+  hornButton: {
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    padding: 10,
+    borderRadius: 20,
+  },
+  hornText: { color: "#fff", fontSize: 16 },
+  overlay: {
+    position: "absolute",
+    width: 200,
+    height: 200,
+    backgroundColor: "rgba(0, 0, 0, 0.7)",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 10,
+  },
+  overlayImage: { width: 50, height: 50 },
+  overlayText: { color: "#fff", fontSize: 14, marginTop: 10 },
   imageContainer: {
     marginTop: 32,
     marginHorizontal: 16,
