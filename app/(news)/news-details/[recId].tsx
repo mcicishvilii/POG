@@ -51,13 +51,17 @@ const NewsDetailsScreen = () => {
   useEffect(() => {
     const fetchNewsDetails = async () => {
       try {
-        const response = await fetch(
-          `https://dev.proservice.ge/pog.ge/api/news.php?rec_id=${recId}`
-        );
+        const url = `https://dev.proservice.ge/pog.ge/api/news.php?rec_id=${recId}`;
+
+        const response = await fetch(url);
         const json = await response.json();
 
         if (json && Array.isArray(json) && json.length > 0) {
-          setNewsDetails(json[0]);
+          const newsItem = json[0];
+          const fetchedLanguage = newsItem.lang === "eng" ? "eng" : "geo";
+          setSelectedLanguage(fetchedLanguage);
+
+          setNewsDetails(newsItem);
         } else {
           console.warn("No data available for this recId:", recId);
           setNewsDetails(null);
