@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -6,20 +6,68 @@ import {
   StyleSheet,
   TouchableOpacity,
   Alert,
+  ActivityIndicator,
 } from "react-native";
+import HTMLView from "react-native-htmlview";
 import CustomTextWithUnderline from "./CustomTextWithUnderline";
 
 const HeaderForList = () => {
+  const [newsData, setNewsData] = useState([]);
+  const [selectedNewsIndex, setSelectedNewsIndex] = useState(0);
+  const [loading, setLoading] = useState(true);
+
+  const truncateText = (htmlText, maxChars = 70) => {
+    if (!htmlText) {
+      return "";
+    }
+    const plainText = htmlText.replace(/<[^>]+>/g, "");
+    return plainText.length > maxChars
+      ? plainText.slice(0, maxChars) + "..."
+      : plainText;
+  };
+
+  useEffect(() => {
+    const fetchNews = async () => {
+      try {
+        const response = await fetch(
+          "https://dev.proservice.ge/pog.ge/api/news.php"
+        );
+        const result = await response.json();
+        if (result?.data) {
+          setNewsData(result.data.slice(0, 2)); // Get only the first two items
+        }
+      } catch (error) {
+        console.error("Error fetching news:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchNews();
+  }, []);
+
   const showAlert = () => {
     Alert.alert("Alert", "Horn button pressed!");
   };
+
+  if (loading) {
+    return (
+      <View style={styles.loaderContainer}>
+        <ActivityIndicator size="large" color="#608d77" />
+      </View>
+    );
+  }
+
+  const selectedNews = newsData[selectedNewsIndex];
 
   return (
     <View>
       <View style={styles.outerContainer}>
         <View style={styles.imageContainer}>
           <Image
-            source={{ uri: "https://via.placeholder.com/150" }}
+            source={{
+              uri: `https://dev.proservice.ge/pog.ge/${selectedNews.img}`,
+            }}
             style={styles.image}
           />
           <TouchableOpacity style={styles.hornButton} onPress={showAlert}>
@@ -28,21 +76,33 @@ const HeaderForList = () => {
         </View>
 
         <Text style={styles.simpleText}>ვიდეო</Text>
+        <HTMLView
+          style={styles.whiteText}
+          value={`<p>${truncateText(selectedNews.text, 100)}</p>`}
+          stylesheet={htmlStyles}
+        />
 
-        <Text style={styles.whiteText}>
-          არასრულწლოვანთა მართლმსაჯულება საქართველოს პროკურატურის ერთ-ერთი
-          პრიორიტეტული მიმართუ...
-        </Text>
-
-        <Text style={styles.dateText}>17.02.2024</Text>
+        <Text style={styles.dateText}>{selectedNews.date}</Text>
 
         <View style={styles.squareRow}>
-          <View style={styles.square}>
+          <TouchableOpacity
+            style={[
+              styles.square,
+              selectedNewsIndex === 0 && styles.activeSquare,
+            ]}
+            onPress={() => setSelectedNewsIndex(0)}
+          >
             <Text style={styles.squareText}>1</Text>
-          </View>
-          <View style={styles.square}>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.square,
+              selectedNewsIndex === 1 && styles.activeSquare,
+            ]}
+            onPress={() => setSelectedNewsIndex(1)}
+          >
             <Text style={styles.squareText}>2</Text>
-          </View>
+          </TouchableOpacity>
         </View>
       </View>
       <CustomTextWithUnderline />
@@ -54,6 +114,7 @@ const styles = StyleSheet.create({
   outerContainer: {
     flex: 1,
     backgroundColor: "#608d77",
+    marginBottom: 20,
   },
   imageContainer: {
     marginTop: 32,
@@ -113,10 +174,39 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginVertical: 36,
   },
+  activeSquare: {
+    backgroundColor: "#ECBC55", // Highlight active square
+  },
   squareText: {
     color: "#000",
     fontSize: 18,
   },
+  loaderContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#608d77",
+  },
 });
+
+const htmlStyles = {
+  p: {
+    color: "#ffffff",
+    fontSize: 16,
+    lineHeight: 22,
+    marginBottom: 10,
+  },
+  strong: {
+    fontWeight: "bold",
+    color: "#ECBC55",
+  },
+  em: {
+    fontStyle: "italic",
+  },
+  a: {
+    color: "#FFDD44",
+    textDecorationLine: "underline",
+  },
+};
 
 export default HeaderForList;
