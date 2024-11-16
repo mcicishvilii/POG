@@ -14,11 +14,17 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import HTMLView from "react-native-htmlview";
+import HeaderRow from "@/components/HeaderRow";
+import { useDrawer } from "./DrawerContext";
+import CustomTextWithUnderline from "@/components/CustomTextWithUnderline";
+import CustomTextWithUnderlineStart from "@/components/CustomTextWithUnderlineStart";
+import BackButton from "@/components/BackButton";
 
 const NewsDetailsScreen = () => {
   const { recId } = useLocalSearchParams();
   const router = useRouter();
   const navigation = useNavigation();
+  const { setIsOpen } = useDrawer();
   const [newsDetails, setNewsDetails] = useState(null);
   const [loading, setLoading] = useState(true);
   console.log("recId:", recId);
@@ -75,12 +81,20 @@ const NewsDetailsScreen = () => {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
-      <TouchableOpacity onPress={() => navigation.toggleDrawer()}>
-        <Ionicons name="menu" size={24} color="black" />
-      </TouchableOpacity>
+    <View style={styles.container}>
+      <View style={styles.justPadding}></View>
+      <HeaderRow
+        onLogoPress={() => router.push("/")}
+        onClosePress={() => setIsOpen(true)}
+        mainText="News Portal"
+        subText="News Portal"
+      />
 
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
+        <View style={styles.row}>
+          <CustomTextWithUnderlineStart />
+          <BackButton onPress={() => router.back()} />
+        </View>
         <Image
           source={{
             uri: `https://dev.proservice.ge/pog.ge/${newsDetails.img}`,
@@ -92,8 +106,6 @@ const NewsDetailsScreen = () => {
 
         <HTMLView value={newsDetails.text} stylesheet={styles} />
 
-        {/* <Text style={styles.text}>{newsDetails.text}</Text> */}
-
         <TouchableOpacity
           onPress={() => router.back()}
           style={styles.backButton}
@@ -101,18 +113,27 @@ const NewsDetailsScreen = () => {
           <Text style={styles.backButtonText}>Back</Text>
         </TouchableOpacity>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
-    paddingTop: 32,
+  },
+  justPadding: {
+    backgroundColor: "#608d77",
+    paddingBottom: 16,
   },
   scrollViewContent: {
-    paddingBottom: 32,
+    paddingHorizontal: 16,
+    paddingVertical: 32,
+  },
+  row: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 16,
   },
   image: { width: "100%", height: 200, borderRadius: 8, marginBottom: 16 },
   title: { fontSize: 24, fontWeight: "bold", marginBottom: 8 },

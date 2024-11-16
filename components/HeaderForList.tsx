@@ -5,13 +5,10 @@ import {
   Image,
   StyleSheet,
   TouchableOpacity,
-  Alert,
   Dimensions,
   ActivityIndicator,
-  LayoutAnimation,
   UIManager,
   Platform,
-  SafeAreaView,
 } from "react-native";
 import HTMLView from "react-native-htmlview";
 import CustomTextWithUnderline from "./CustomTextWithUnderline";
@@ -74,7 +71,7 @@ const HeaderForList = () => {
         );
         const result = await response.json();
         if (result?.data) {
-          setNewsData(result.data.slice(0, 2)); // Get only the first two items
+          setNewsData(result.data.slice(0, 2));
         }
       } catch (error) {
         console.error("Error fetching news:", error);
