@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Ionicons from "@expo/vector-icons/Ionicons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import {
   View,
@@ -19,6 +18,9 @@ import { useDrawer } from "./DrawerContext";
 import CustomTextWithUnderline from "@/components/CustomTextWithUnderline";
 import CustomTextWithUnderlineStart from "@/components/CustomTextWithUnderlineStart";
 import BackButton from "@/components/BackButton";
+import { useTranslation } from "react-i18next";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import NewsTextWithUnderlineStart from "@/components/CustomTextWithUnderlineStart";
 
 const NewsDetailsScreen = () => {
   const { recId } = useLocalSearchParams();
@@ -27,7 +29,24 @@ const NewsDetailsScreen = () => {
   const { setIsOpen } = useDrawer();
   const [newsDetails, setNewsDetails] = useState(null);
   const [loading, setLoading] = useState(true);
-  console.log("recId:", recId);
+  const { t, i18n } = useTranslation();
+  const [selectedLanguage, setSelectedLanguage] = useState("en");
+
+  useEffect(() => {
+    const fetchSelectedLanguage = async () => {
+      try {
+        const storedLanguage = await AsyncStorage.getItem("selectedLanguage");
+        if (storedLanguage) {
+          setSelectedLanguage(storedLanguage);
+          i18n.changeLanguage(storedLanguage);
+        }
+      } catch (error) {
+        console.error("Failed to fetch selected language:", error);
+      }
+    };
+
+    fetchSelectedLanguage();
+  }, [i18n]);
 
   useEffect(() => {
     const fetchNewsDetails = async () => {
@@ -86,13 +105,13 @@ const NewsDetailsScreen = () => {
       <HeaderRow
         onLogoPress={() => router.push("/")}
         onClosePress={() => setIsOpen(true)}
-        mainText="News Portal"
-        subText="News Portal"
+        mainText={t("mainText")}
+        subText={t("comainText")}
       />
 
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
         <View style={styles.row}>
-          <CustomTextWithUnderlineStart />
+          <NewsTextWithUnderlineStart text={t("news")} />
           <BackButton onPress={() => router.back()} />
         </View>
         <Image
@@ -104,13 +123,17 @@ const NewsDetailsScreen = () => {
         <Text style={styles.title}>{newsDetails.title}</Text>
         <Text style={styles.date}>{newsDetails.date}</Text>
 
-        <HTMLView value={newsDetails.text} stylesheet={styles} />
+        <HTMLView
+          value={newsDetails.text}
+          stylesheet={styles}
+          addLineBreaks={true}
+        />
 
         <TouchableOpacity
           onPress={() => router.back()}
           style={styles.backButton}
         >
-          <Text style={styles.backButtonText}>Back</Text>
+          <Text style={styles.backButtonText}>{t("backButtonText")}</Text>
         </TouchableOpacity>
       </ScrollView>
     </View>

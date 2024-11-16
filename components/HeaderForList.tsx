@@ -13,6 +13,7 @@ import {
 import HTMLView from "react-native-htmlview";
 import CustomTextWithUnderline from "./CustomTextWithUnderline";
 import MyImage from "../assets/images/announcement-img.png";
+import { useTranslation } from "react-i18next"; // Import useTranslation hook
 
 if (
   Platform.OS === "android" &&
@@ -28,6 +29,7 @@ const HeaderForList = () => {
   const [overlayVisible, setOverlayVisible] = useState(false);
   const [overlayPosition, setOverlayPosition] = useState({ x: 0, y: 0 });
   const hornButtonRef = useRef(null);
+  const { t, i18n } = useTranslation(); // Initialize translation
 
   const handleButtonPress = () => {
     if (overlayVisible) {
@@ -54,6 +56,7 @@ const HeaderForList = () => {
       setOverlayVisible(true);
     });
   };
+
   const truncateText = (htmlText, maxChars = 70) => {
     if (!htmlText) {
       return "";
@@ -63,12 +66,17 @@ const HeaderForList = () => {
       ? plainText.slice(0, maxChars) + "..."
       : plainText;
   };
+
   useEffect(() => {
     const fetchNews = async () => {
       try {
-        const response = await fetch(
-          "https://dev.proservice.ge/pog.ge/api/news.php"
-        );
+        const selectedLanguage = i18n.language; // Get current language from i18n
+        const endpoint =
+          selectedLanguage === "ge"
+            ? "https://dev.proservice.ge/pog.ge/api/news.php"
+            : "https://dev.proservice.ge/pog.ge/api/news_en.php";
+
+        const response = await fetch(endpoint);
         const result = await response.json();
         if (result?.data) {
           setNewsData(result.data.slice(0, 2));
@@ -81,7 +89,8 @@ const HeaderForList = () => {
     };
 
     fetchNews();
-  }, []);
+  }, [i18n.language]); // Re-fetch news when language changes
+
   if (loading) {
     return (
       <View style={styles.loaderContainer}>
@@ -89,7 +98,9 @@ const HeaderForList = () => {
       </View>
     );
   }
+
   const selectedNews = newsData[selectedNewsIndex];
+
   return (
     <View>
       <View style={styles.outerContainer}>
@@ -122,16 +133,13 @@ const HeaderForList = () => {
             </View>
           )}
         </View>
-
-        <Text style={styles.simpleText}>ვიდეო</Text>
+        <Text style={styles.simpleText}>{t("video")}</Text>
         <HTMLView
           style={styles.whiteText}
           value={`<p>${truncateText(selectedNews.text, 100)}</p>`}
           stylesheet={htmlStyles}
         />
-
         <Text style={styles.dateText}>{selectedNews.date}</Text>
-
         <View style={styles.squareRow}>
           <TouchableOpacity
             style={[
@@ -159,6 +167,7 @@ const HeaderForList = () => {
 };
 
 const styles = StyleSheet.create({
+  // Styles remain unchanged
   outerContainer: {
     flex: 1,
     backgroundColor: "#608d77",

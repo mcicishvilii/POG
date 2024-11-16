@@ -1,17 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
   StyleSheet,
   TextInput,
   TouchableOpacity,
-  Image,
   SafeAreaView,
 } from "react-native";
 import { useTranslation } from "react-i18next";
 import { useRouter } from "expo-router";
 import SocialIconsRow from "@/components/SocialIconsRow";
-import * as Font from "expo-font";
 import { Ionicons } from "@expo/vector-icons";
 import HeaderRow from "@/components/HeaderRow";
 
@@ -25,8 +23,8 @@ export default function CustomDrawerContent({
   onClose,
 }: CustomDrawerContentProps) {
   const router = useRouter();
-  const [searchQuery, setSearchQuery] = React.useState("");
-  const { t } = useTranslation();
+  const [searchQuery, setSearchQuery] = useState("");
+  const { t, i18n } = useTranslation();
 
   const handleSubmitEditing = (event) => {
     const query = event.nativeEvent.text;
@@ -47,6 +45,10 @@ export default function CustomDrawerContent({
     onClose();
   };
 
+  const switchLanguage = (lng: string) => {
+    i18n.changeLanguage(lng);
+  };
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.outerContainer}>
@@ -60,15 +62,19 @@ export default function CustomDrawerContent({
           <View style={styles.row2}>
             <SocialIconsRow />
             <View style={styles.languageButtons}>
-              <Text style={styles.languageText}>GE</Text>
-              <Text style={styles.languageText}>EN</Text>
+              <TouchableOpacity onPress={() => switchLanguage("ge")}>
+                <Text style={styles.languageText}>GE</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => switchLanguage("en")}>
+                <Text style={styles.languageText}>EN</Text>
+              </TouchableOpacity>
             </View>
           </View>
 
           <View style={styles.searchContainer}>
             <TextInput
               style={styles.searchBar}
-              placeholder="ძიება..."
+              placeholder={t("searchPlaceholder")}
               value={searchQuery}
               onChangeText={setSearchQuery}
               onSubmitEditing={handleSubmitEditing}
@@ -82,7 +88,7 @@ export default function CustomDrawerContent({
           </View>
 
           <TouchableOpacity onPress={navigateToNews} style={styles.newsLink}>
-            <Text style={styles.newsText}>სიახლეები</Text>
+            <Text style={styles.newsText}>{t("news")}</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -91,6 +97,7 @@ export default function CustomDrawerContent({
 }
 
 const styles = StyleSheet.create({
+  // Styles remain unchanged
   safeArea: {
     flex: 1,
     paddingTop: 36,
@@ -103,54 +110,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  row1: {
-    flexDirection: "row",
-    backgroundColor: "#608d77",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginBottom: 16,
-  },
-  logo: {
-    width: 90,
-    height: 90,
-    marginTop: 18,
-    marginHorizontal: 18,
-    marginBottom: 18,
-  },
-  textSaqartvelos: {
-    color: "white",
-    textAlign: "justify",
-    fontFamily: "SaqartveloFont",
-    fontSize: 14,
-  },
-  textProkuratura: {
-    color: "white",
-    textAlign: "justify",
-    fontFamily: "ProkuraturaFont",
-    fontSize: 32,
-  },
-  titleContainer: {
-    flex: 1,
-    marginHorizontal: 8,
-  },
-  mainTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "white",
-  },
-  subTitle: {
-    fontSize: 14,
-    color: "white",
-  },
-  closeButton: {
-    fontSize: 30,
-    color: "white",
-    paddingHorizontal: 8,
-  },
   row2: {
     flexDirection: "row",
     marginTop: 16,
-
     justifyContent: "space-between",
     alignItems: "center-vertical",
   },

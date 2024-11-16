@@ -1,10 +1,29 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { View, Text, StyleSheet } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useTranslation } from "react-i18next";
 
 const NewsTextWithUnderline = () => {
+  const { t, i18n } = useTranslation();
+
+  useEffect(() => {
+    const fetchSelectedLanguage = async () => {
+      try {
+        const storedLanguage = await AsyncStorage.getItem("selectedLanguage");
+        if (storedLanguage) {
+          i18n.changeLanguage(storedLanguage); // Change the language dynamically
+        }
+      } catch (error) {
+        console.error("Failed to fetch selected language:", error);
+      }
+    };
+
+    fetchSelectedLanguage();
+  }, [i18n]);
+
   return (
     <View style={styles.container}>
-      <Text style={styles.newsTextStatic}>სიახლეები</Text>
+      <Text style={styles.newsTextStatic}>{t("news")}</Text>
       <View style={styles.customUnderline} />
     </View>
   );

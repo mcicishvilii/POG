@@ -7,15 +7,23 @@ const resources = {
   en: {
     translation: {
       mainText: "Prosecution Service",
-      comainText:"of Georgia"
-    }
+      comainText: "of Georgia",
+      news: "News",
+      searchPlaceholder: "Search...",
+      backButtonText: "Back",
+      video: "Video",
+    },
   },
   ge: {
     translation: {
       mainText: "საქართველოს",
-      comainText:"პროკურატურა"
-    }
-  }
+      comainText: "პროკურატურა",
+      news: "სიახლეები",
+      video: "ვიდეო",
+      searchPlaceholder: "ძიება...",
+      backButtonText: "უკან დაბრუნება",
+    },
+  },
 };
 
 i18n

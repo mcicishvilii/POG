@@ -11,18 +11,16 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { useRouter } from "expo-router";
-import { useNavigation } from "@react-navigation/native";
 import { useLocalSearchParams } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import CustomTextWithUnderline from "../../components/CustomTextWithUnderline";
 import CustomDivider from "@/components/CustomDivider";
 import HeaderForList from "@/components/HeaderForList";
 import HTMLView from "react-native-htmlview";
 import { useDrawer } from "./news-details/DrawerContext";
+import { useTranslation } from "react-i18next";
 
 export default function NewsFeedScreen() {
   const router = useRouter();
-  const navigation = useNavigation();
   const { searchQuery } = useLocalSearchParams();
   const [newsItems, setNewsItems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -30,6 +28,7 @@ export default function NewsFeedScreen() {
   const [currentPage, setCurrentPage] = useState(1);
   const { setIsOpen } = useDrawer();
   const [totalPages, setTotalPages] = useState(0);
+  const { t, i18n } = useTranslation();
 
   const truncateText = (htmlText, maxChars = 70) => {
     if (!htmlText) {
@@ -43,11 +42,19 @@ export default function NewsFeedScreen() {
 
   useEffect(() => {
     const fetchSelectedLanguage = async () => {
-      const lang = await AsyncStorage.getItem("selectedLanguage");
-      setSelectedLanguage(lang || "en");
+      try {
+        const storedLanguage = await AsyncStorage.getItem("selectedLanguage");
+        if (storedLanguage) {
+          setSelectedLanguage(storedLanguage);
+          i18n.changeLanguage(storedLanguage);
+        }
+      } catch (error) {
+        console.error("Failed to fetch selected language:", error);
+      }
     };
+
     fetchSelectedLanguage();
-  }, []);
+  }, [i18n]);
 
   const navigateToNewsDetails = (recId) => {
     router.push(`/news-details/${recId}`);
@@ -182,8 +189,8 @@ export default function NewsFeedScreen() {
       <HeaderRow
         onLogoPress={() => router.push("/")}
         onClosePress={() => setIsOpen(true)}
-        mainText="News Portal"
-        subText="News Portal"
+        mainText={t("mainText")}
+        subText={t("comainText")}
       />
 
       <FlatList

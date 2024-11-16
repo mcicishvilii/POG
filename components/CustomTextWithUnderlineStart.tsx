@@ -1,10 +1,16 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 
-const NewsTextWithUnderlineStart = () => {
+interface NewsTextWithUnderlineStartProps {
+  text: string;
+}
+
+const NewsTextWithUnderlineStart: React.FC<NewsTextWithUnderlineStartProps> = ({
+  text,
+}) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.newsTextStatic}>სიახლეები</Text>
+      <Text style={styles.newsTextStatic}>{text}</Text>
       <View style={styles.customUnderline} />
     </View>
   );
@@ -23,7 +29,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   customUnderline: {
-    width: "10%",
+    width: "50%",
     height: 3,
     marginBottom: 25,
     backgroundColor: "#B89B5E",
