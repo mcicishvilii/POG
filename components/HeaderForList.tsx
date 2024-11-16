@@ -15,6 +15,7 @@ import {
 } from "react-native";
 import HTMLView from "react-native-htmlview";
 import CustomTextWithUnderline from "./CustomTextWithUnderline";
+import MyImage from "../assets/images/announcement-img.png";
 
 if (
   Platform.OS === "android" &&
@@ -38,18 +39,24 @@ const HeaderForList = () => {
     }
 
     hornButtonRef.current.measure((fx, fy, width, height, px, py) => {
-      console.log("Measurements:", fx, fy, width, height, px, py);
-      const overlayWidth = 200; // Width of overlay
-      const overlayHeight = 200; // Height of overlay
-
-      const safeX = px - overlayWidth / 2 + width / 2;
-      const safeY = py - overlayHeight / 2;
-
+      const overlayWidth = 380;
+      const overlayHeight = 350;
+      const { width: screenWidth, height: screenHeight } =
+        Dimensions.get("window");
+      const centerX = px + width / 2;
+      const centerY = py + height / 2;
+      const safeX = Math.min(
+        Math.max(centerX - overlayWidth / 2, 0),
+        screenWidth - overlayWidth
+      );
+      const safeY = Math.min(
+        Math.max(centerY - overlayHeight / 2, 0),
+        screenHeight - overlayHeight
+      );
       setOverlayPosition({ x: safeX, y: safeY });
       setOverlayVisible(true);
     });
   };
-
   const truncateText = (htmlText, maxChars = 70) => {
     if (!htmlText) {
       return "";
@@ -59,7 +66,6 @@ const HeaderForList = () => {
       ? plainText.slice(0, maxChars) + "..."
       : plainText;
   };
-
   useEffect(() => {
     const fetchNews = async () => {
       try {
@@ -79,7 +85,6 @@ const HeaderForList = () => {
 
     fetchNews();
   }, []);
-
   if (loading) {
     return (
       <View style={styles.loaderContainer}>
@@ -87,9 +92,7 @@ const HeaderForList = () => {
       </View>
     );
   }
-
   const selectedNews = newsData[selectedNewsIndex];
-
   return (
     <View>
       <View style={styles.outerContainer}>
@@ -118,11 +121,7 @@ const HeaderForList = () => {
                 },
               ]}
             >
-              <Image
-                source={{ uri: "https://via.placeholder.com/50" }}
-                style={styles.overlayImage}
-              />
-              <Text style={styles.overlayText}>Overlay Text</Text>
+              <Image source={MyImage} style={styles.overlayImage} />
             </View>
           )}
         </View>
@@ -175,17 +174,26 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   hornText: { color: "#fff", fontSize: 16 },
+
   overlay: {
     position: "absolute",
-    width: 200,
-    height: 200,
-    backgroundColor: "rgba(0, 0, 0, 0.7)",
+    width: 300,
+    height: 480,
+    backgroundColor: "rgba(255, 255, 255, 1)",
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 10,
+    zIndex: 9999,
+    elevation: 10,
   },
-  overlayImage: { width: 50, height: 50 },
-  overlayText: { color: "#fff", fontSize: 14, marginTop: 10 },
+  overlayImage: {
+    width: "85%",
+    height: "85%",
+    borderRadius: 10,
+    zIndex: 9999,
+    margin: 10,
+  },
+
   imageContainer: {
     marginTop: 32,
     marginHorizontal: 16,
