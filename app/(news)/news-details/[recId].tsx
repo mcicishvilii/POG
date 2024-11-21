@@ -51,17 +51,22 @@ const NewsDetailsScreen = () => {
   useEffect(() => {
     const fetchNewsDetails = async () => {
       try {
-        const url = `https://dev.proservice.ge/pog.ge/api/news.php?rec_id=${recId}`;
+        setLoading(true);
+
+        // Fetch the selected language from AsyncStorage
+        const storedLanguage = await AsyncStorage.getItem("selectedLanguage");
+        const endpoint =
+          storedLanguage === "en"
+            ? "https://dev.proservice.ge/pog.ge/api/news_en.php"
+            : "https://dev.proservice.ge/pog.ge/api/news.php";
+
+        const url = `${endpoint}?rec_id=${recId}`;
 
         const response = await fetch(url);
         const json = await response.json();
 
         if (json && Array.isArray(json) && json.length > 0) {
-          const newsItem = json[0];
-          const fetchedLanguage = newsItem.lang === "eng" ? "eng" : "geo";
-          setSelectedLanguage(fetchedLanguage);
-
-          setNewsDetails(newsItem);
+          setNewsDetails(json[0]);
         } else {
           console.warn("No data available for this recId:", recId);
           setNewsDetails(null);
