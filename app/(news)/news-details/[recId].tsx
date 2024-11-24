@@ -118,7 +118,10 @@ const NewsDetailsScreen = () => {
         subText={t("comainText")}
       />
 
-      <ScrollView contentContainerStyle={styles.scrollViewContent}>
+      <ScrollView
+        contentContainerStyle={styles.scrollViewContent}
+        showsVerticalScrollIndicator={false}
+      >
         <View style={styles.row}>
           <NewsTextWithUnderlineStart text={t("news")} />
           <BackButton onPress={() => router.back()} />

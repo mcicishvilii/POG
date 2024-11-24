@@ -200,6 +200,7 @@ export default function NewsFeedScreen() {
         contentContainerStyle={styles.listContainer}
         ListHeaderComponent={<HeaderForList />}
         ListFooterComponent={<Pagination />}
+        showsVerticalScrollIndicator={false}
       />
     </View>
   );
