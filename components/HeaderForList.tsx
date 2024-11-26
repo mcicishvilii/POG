@@ -29,7 +29,7 @@ const HeaderForList = () => {
   const [overlayVisible, setOverlayVisible] = useState(false);
   const [overlayPosition, setOverlayPosition] = useState({ x: 0, y: 0 });
   const hornButtonRef = useRef(null);
-  const { t, i18n } = useTranslation(); // Initialize translation
+  const { t, i18n } = useTranslation();
 
   const handleButtonPress = () => {
     if (overlayVisible) {
@@ -70,17 +70,15 @@ const HeaderForList = () => {
   useEffect(() => {
     const fetchNews = async () => {
       try {
-        const selectedLanguage = i18n.language; // Get current language from i18n
+        const selectedLanguage = i18n.language;
         const endpoint =
           selectedLanguage === "ge"
-            ? "https://dev.proservice.ge/pog.ge/api/news.php"
-            : "https://dev.proservice.ge/pog.ge/api/news_en.php";
+            ? "https://dev.proservice.ge/pog.ge/api/slider.php"
+            : "https://dev.proservice.ge/pog.ge/api/slider_en.php";
 
         const response = await fetch(endpoint);
         const result = await response.json();
-        if (result?.data) {
-          setNewsData(result.data.slice(0, 2));
-        }
+        setNewsData(result || []);
       } catch (error) {
         console.error("Error fetching news:", error);
       } finally {
@@ -89,7 +87,7 @@ const HeaderForList = () => {
     };
 
     fetchNews();
-  }, [i18n.language]); // Re-fetch news when language changes
+  }, [i18n.language]);
 
   if (loading) {
     return (
@@ -100,17 +98,17 @@ const HeaderForList = () => {
   }
 
   const selectedNews = newsData[selectedNewsIndex];
+  const title = selectedNews.title || t("noTitleAvailable");
+  const intro = selectedNews.intro || t("noDescriptionAvailable");
+  const imageUrl = selectedNews.img
+    ? `https://dev.proservice.ge/pog.ge/${selectedNews.img.replace("../", "")}`
+    : "https://via.placeholder.com/300x200.png?text=No+Image+Available";
 
   return (
     <View>
       <View style={styles.outerContainer}>
         <View style={styles.imageContainer}>
-          <Image
-            source={{
-              uri: `https://dev.proservice.ge/pog.ge/${selectedNews.img}`,
-            }}
-            style={styles.image}
-          />
+          <Image source={{ uri: imageUrl }} style={styles.image} />
           <TouchableOpacity
             ref={hornButtonRef}
             style={styles.hornButton}
@@ -133,32 +131,25 @@ const HeaderForList = () => {
             </View>
           )}
         </View>
-        <Text style={styles.simpleText}>{t("video")}</Text>
+        <Text style={styles.simpleText}>{truncateText(intro, 100)}</Text>
         <HTMLView
           style={styles.whiteText}
-          value={`<p>${truncateText(selectedNews.text, 100)}</p>`}
+          value={`<p>${truncateText(title, 100)}</p>`}
           stylesheet={htmlStyles}
         />
-        <Text style={styles.dateText}>{selectedNews.date}</Text>
         <View style={styles.squareRow}>
-          <TouchableOpacity
-            style={[
-              styles.square,
-              selectedNewsIndex === 0 && styles.activeSquare,
-            ]}
-            onPress={() => setSelectedNewsIndex(0)}
-          >
-            <Text style={styles.squareText}>1</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[
-              styles.square,
-              selectedNewsIndex === 1 && styles.activeSquare,
-            ]}
-            onPress={() => setSelectedNewsIndex(1)}
-          >
-            <Text style={styles.squareText}>2</Text>
-          </TouchableOpacity>
+          {newsData.map((_, index) => (
+            <TouchableOpacity
+              key={index}
+              style={[
+                styles.square,
+                selectedNewsIndex === index && styles.activeSquare,
+              ]}
+              onPress={() => setSelectedNewsIndex(index)}
+            >
+              <Text style={styles.squareText}>{index + 1}</Text>
+            </TouchableOpacity>
+          ))}
         </View>
       </View>
       <CustomTextWithUnderline />

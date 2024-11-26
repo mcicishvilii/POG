@@ -21,6 +21,7 @@ import BackButton from "@/components/BackButton";
 import { useTranslation } from "react-i18next";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import NewsTextWithUnderlineStart from "@/components/CustomTextWithUnderlineStart";
+import FooterCustom from "@/components/FooterCustom";
 
 const NewsDetailsScreen = () => {
   const { recId } = useLocalSearchParams();
@@ -52,8 +53,6 @@ const NewsDetailsScreen = () => {
     const fetchNewsDetails = async () => {
       try {
         setLoading(true);
-
-        // Fetch the selected language from AsyncStorage
         const storedLanguage = await AsyncStorage.getItem("selectedLanguage");
         const endpoint =
           storedLanguage === "en"
@@ -137,16 +136,33 @@ const NewsDetailsScreen = () => {
 
         <HTMLView
           value={newsDetails.text}
-          stylesheet={styles}
+          stylesheet={{
+            ...styles,
+            p: {
+              paddingHorizontal: 16,
+              paddingBottom: 8,
+            },
+            div: {
+              paddingHorizontal: 16,
+            },
+          }}
           addLineBreaks={true}
         />
 
         <TouchableOpacity
           onPress={() => router.back()}
-          style={styles.backButton}
+          style={{
+            backgroundColor: "#628F6F",
+            borderRadius: 4,
+            marginHorizontal: 16,
+            paddingVertical: 8,
+          }}
         >
-          <Text style={styles.backButtonText}>{t("backButtonText")}</Text>
+          <Text style={{ color: "#fff", fontSize: 16, textAlign: "center" }}>
+            {t("backButtonText")}
+          </Text>
         </TouchableOpacity>
+        <FooterCustom />
       </ScrollView>
     </View>
   );
@@ -159,21 +175,43 @@ const styles = StyleSheet.create({
   justPadding: {
     backgroundColor: "#608d77",
     paddingBottom: 16,
+    paddingHorizontal: 16,
   },
   scrollViewContent: {
-    paddingHorizontal: 16,
-    paddingVertical: 32,
+    paddingTop: 32,
   },
   row: {
+    paddingHorizontal: 16,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     marginBottom: 16,
   },
-  image: { width: "100%", height: 200, borderRadius: 8, marginBottom: 16 },
-  title: { fontSize: 24, fontWeight: "bold", marginBottom: 8 },
-  date: { color: "#628F6F", fontWeight: "bold", marginBottom: 16 },
-  text: { fontSize: 16, lineHeight: 24, marginBottom: 32 },
+  image: {
+    width: "90%",
+    height: 200,
+    borderRadius: 8,
+    marginHorizontal: 20,
+    marginBottom: 16,
+  },
+  title: {
+    paddingHorizontal: 16,
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 8,
+  },
+  date: {
+    paddingHorizontal: 16,
+    color: "#628F6F",
+    fontWeight: "bold",
+    marginBottom: 16,
+  },
+  text: {
+    paddingHorizontal: 16,
+    fontSize: 16,
+    lineHeight: 24,
+    marginBottom: 32,
+  },
   backButton: {
     width: "100%",
     paddingVertical: 8,
@@ -182,7 +220,11 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     marginTop: 16,
   },
-  backButtonText: { color: "#fff", fontSize: 16, textAlign: "center" },
+  backButtonText: {
+    color: "#fff",
+    fontSize: 16,
+    textAlign: "center",
+  },
   loadingContainer: { flex: 1, justifyContent: "center", alignItems: "center" },
   errorContainer: { flex: 1, justifyContent: "center", alignItems: "center" },
   errorText: { color: "red" },
