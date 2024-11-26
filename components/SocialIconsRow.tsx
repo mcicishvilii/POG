@@ -6,16 +6,16 @@ import {
   StyleSheet,
 } from "react-native";
 
-const SocialIconsRow = () => {
+const SocialIconsRow = ({ justifyContent = "center", tintColor = "black" }) => {
   return (
-    <View style={styles.iconRow}>
+    <View style={[styles.iconRow, { justifyContent }]}>
       <TouchableOpacity
         onPress={() =>
           Linking.openURL("https://www.facebook.com/OfficialPOG /")
         }
       >
         <Image
-          style={styles.icon}
+          style={[styles.icon, { tintColor }]}
           source={require("../assets/images/icons8-facebook-50.png")}
           accessibilityLabel="Facebook logo"
         />
@@ -25,7 +25,7 @@ const SocialIconsRow = () => {
         onPress={() => Linking.openURL("https://x.com/OfficialPOG?mx=2")}
       >
         <Image
-          style={styles.icon}
+          style={[styles.icon, { tintColor }]}
           source={require("../assets/images/icons8-x-50.png")}
           accessibilityLabel="X logo"
         />
@@ -39,7 +39,7 @@ const SocialIconsRow = () => {
         }
       >
         <Image
-          style={styles.icon}
+          style={[styles.icon, { tintColor }]}
           source={require("../assets/images/icons8-youtube-50.png")}
           accessibilityLabel="YouTube logo"
         />
@@ -51,7 +51,6 @@ const SocialIconsRow = () => {
 const styles = StyleSheet.create({
   iconRow: {
     flexDirection: "row",
-    justifyContent: "center",
     paddingBottom: 6,
   },
   icon: {

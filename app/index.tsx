@@ -83,7 +83,7 @@ const FirstScreen = () => {
         <Text style={styles.textSaqartvelos}>{t("comainText")}</Text>
       </View>
 
-      <SocialIconsRow />
+      <SocialIconsRow justifyContent="center" tintColor="white" />
     </SafeAreaView>
   );
 };

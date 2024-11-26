@@ -22,6 +22,7 @@ import { useTranslation } from "react-i18next";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import NewsTextWithUnderlineStart from "@/components/CustomTextWithUnderlineStart";
 import FooterCustom from "@/components/FooterCustom";
+import SocialIconsRow from "@/components/SocialIconsRow";
 
 const NewsDetailsScreen = () => {
   const { recId } = useLocalSearchParams();
@@ -148,6 +149,8 @@ const NewsDetailsScreen = () => {
           }}
           addLineBreaks={true}
         />
+
+        <SocialIconsRow justifyContent="flex-start" tintColor="#608d77" />
 
         <TouchableOpacity
           onPress={() => router.back()}

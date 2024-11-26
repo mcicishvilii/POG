@@ -60,7 +60,8 @@ export default function CustomDrawerContent({
             subText={t("comainText")}
           />
           <View style={styles.row2}>
-            <SocialIconsRow />
+            <SocialIconsRow justifyContent="flex-start" tintColor="white" />
+
             <View style={styles.languageButtons}>
               <TouchableOpacity onPress={() => switchLanguage("ge")}>
                 <Text style={styles.languageText}>GE</Text>
