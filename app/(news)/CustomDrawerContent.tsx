@@ -12,6 +12,7 @@ import { useRouter } from "expo-router";
 import SocialIconsRow from "@/components/SocialIconsRow";
 import { Ionicons } from "@expo/vector-icons";
 import HeaderRow from "@/components/HeaderRow";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface CustomDrawerContentProps {
   isOpen: boolean;
@@ -45,8 +46,13 @@ export default function CustomDrawerContent({
     onClose();
   };
 
-  const switchLanguage = (lng: string) => {
-    i18n.changeLanguage(lng);
+  const switchLanguage = async (lng: string) => {
+    try {
+      await AsyncStorage.setItem("selectedLanguage", lng); // Save selected language
+      i18n.changeLanguage(lng);
+    } catch (error) {
+      console.error("Failed to save selected language:", error);
+    }
   };
 
   return (

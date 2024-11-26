@@ -26,7 +26,7 @@ export default function NewsFeedScreen() {
   const [loading, setLoading] = useState(true);
   const [selectedLanguage, setSelectedLanguage] = useState("en");
   const [currentPage, setCurrentPage] = useState(1);
-  const { setIsOpen } = useDrawer();
+  const { isOpen, setIsOpen } = useDrawer();
   const [totalPages, setTotalPages] = useState(0);
   const { t, i18n } = useTranslation();
 
@@ -39,20 +39,20 @@ export default function NewsFeedScreen() {
       ? plainText.slice(0, maxChars) + "..."
       : plainText;
   };
-
-  useEffect(() => {
-    const fetchSelectedLanguage = async () => {
-      try {
-        const storedLanguage = await AsyncStorage.getItem("selectedLanguage");
-        if (storedLanguage) {
-          setSelectedLanguage(storedLanguage);
-          i18n.changeLanguage(storedLanguage);
-        }
-      } catch (error) {
-        console.error("Failed to fetch selected language:", error);
+  const fetchSelectedLanguage = async () => {
+    try {
+      const storedLanguage = await AsyncStorage.getItem("selectedLanguage");
+      console.log("storedLanguage", storedLanguage);
+      console.log(storedLanguage);
+      if (storedLanguage) {
+        setSelectedLanguage(storedLanguage);
+        i18n.changeLanguage(storedLanguage);
       }
-    };
-
+    } catch (error) {
+      console.error("Failed to fetch selected language:", error);
+    }
+  };
+  useEffect(() => {
     fetchSelectedLanguage();
   }, [i18n]);
 
@@ -90,6 +90,13 @@ export default function NewsFeedScreen() {
     setCurrentPage(page);
     fetchNews(page);
   };
+  useEffect(() => {
+    console.log("xdeba");
+    if (!isOpen) {
+      fetchNews(currentPage);
+      fetchSelectedLanguage();
+    }
+  }, [isOpen]);
 
   const filteredNews = searchQuery
     ? newsItems.filter(
