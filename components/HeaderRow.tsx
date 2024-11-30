@@ -23,9 +23,24 @@ export default function HeaderRow({
         />
       </TouchableOpacity>
 
+      {/* Wrap the two texts in a container */}
       <View style={styles.titleContainer}>
-        <Text style={styles.textSaqartvelos}>{mainText}</Text>
-        <Text style={styles.textProkuratura}>{subText}</Text>
+        <Text
+          style={styles.textSaqartvelos}
+          numberOfLines={1}
+          adjustsFontSizeToFit
+          minimumFontScale={0.5}
+        >
+          {mainText}
+        </Text>
+        <Text
+          style={styles.textProkuratura}
+          numberOfLines={1}
+          adjustsFontSizeToFit
+          minimumFontScale={0.5}
+        >
+          {subText}
+        </Text>
       </View>
 
       <TouchableOpacity onPress={onClosePress}>
@@ -38,7 +53,7 @@ export default function HeaderRow({
 const styles = StyleSheet.create({
   row1: {
     flexDirection: "row",
-    backgroundColor: "#608d77",
+    backgroundColor: "#628F6F",
     alignItems: "center",
     justifyContent: "space-between",
   },
@@ -49,25 +64,28 @@ const styles = StyleSheet.create({
     marginHorizontal: 18,
     marginBottom: 18,
   },
+  titleContainer: {
+    flex: 1, // Take up available space in the row
+    justifyContent: "center", // Center the text vertically
+    marginHorizontal: 8,
+  },
   textSaqartvelos: {
     color: "white",
-    textAlign: "justify",
     fontFamily: "SaqartveloFont",
     fontSize: 14,
+    width: "100%", // Take the full width of the container
   },
   textProkuratura: {
     color: "white",
-    textAlign: "justify",
     fontFamily: "ProkuraturaFont",
     fontSize: 32,
-  },
-  titleContainer: {
-    flex: 1,
-    marginHorizontal: 8,
+    lineHeight: 32,
+    letterSpacing: 2,
+    width: "100%", // Take the full width of the container
   },
   closeButton: {
     fontSize: 30,
     color: "white",
-    paddingHorizontal: 8,
+    paddingHorizontal: 32,
   },
 });

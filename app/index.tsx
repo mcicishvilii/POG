@@ -91,7 +91,7 @@ const FirstScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "rgba(98, 143, 111, 0.85)",
+    backgroundColor: "#628F6F",
     justifyContent: "space-between",
     padding: 0,
   },
@@ -103,16 +103,17 @@ const styles = StyleSheet.create({
   button: {
     width: 100,
     padding: 10,
+    marginTop: 30,
     borderRadius: 8,
     backgroundColor: "transparent",
     marginHorizontal: 5,
   },
   selectedButton: {
-    backgroundColor: "#FFCCA758",
+    backgroundColor: "#CCA758",
   },
   unselectedBorder: {
     borderWidth: 1,
-    borderColor: "#FFCCA758",
+    borderColor: "#CCA758",
   },
   buttonText: {
     textTransform: "uppercase",
@@ -122,9 +123,11 @@ const styles = StyleSheet.create({
   },
   logoContainer: {
     alignItems: "center",
+    marginBottom: 120,
   },
   logo: {
-    width: 200,
+    marginBottom: 40,
+    width: 220,
     height: 200,
   },
   text: {

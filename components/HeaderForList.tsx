@@ -8,6 +8,7 @@ import {
   Dimensions,
   ActivityIndicator,
   UIManager,
+  ImageBackground,
   Platform,
 } from "react-native";
 import HTMLView from "react-native-htmlview";
@@ -105,92 +106,75 @@ const HeaderForList = () => {
     : "https://via.placeholder.com/300x200.png?text=No+Image+Available";
 
   return (
-    <View>
-      <View style={styles.outerContainer}>
-        <View style={styles.imageContainer}>
-          <Image source={{ uri: imageUrl }} style={styles.image} />
-          <TouchableOpacity
-            ref={hornButtonRef}
-            style={styles.hornButton}
-            onPress={handleButtonPress}
-          >
-            <Text style={styles.hornText}>📢</Text>
-          </TouchableOpacity>
-
-          {overlayVisible && (
-            <View
-              style={[
-                styles.overlay,
-                {
-                  top: overlayPosition.y,
-                  left: overlayPosition.x,
-                },
-              ]}
-            >
-              <Image source={MyImage} style={styles.overlayImage} />
-            </View>
-          )}
-        </View>
-        <Text style={styles.simpleText}>{truncateText(intro, 100)}</Text>
-        <HTMLView
-          style={styles.whiteText}
-          value={`<p>${truncateText(title, 100)}</p>`}
-          stylesheet={htmlStyles}
-        />
-        <View style={styles.squareRow}>
-          {newsData.map((_, index) => (
+    <View style={{ flex: 1 }}>
+      {/* Background Image with overlay content */}
+      <ImageBackground
+        source={require("../assets/images/swiper-bg.png")} // Adjust the path to your image
+        style={styles.outerContainer}
+      >
+        <View style={styles.overlay}>
+          <View style={styles.imageContainer}>
+            <Image source={{ uri: imageUrl }} style={styles.image} />
             <TouchableOpacity
-              key={index}
-              style={[
-                styles.square,
-                selectedNewsIndex === index && styles.activeSquare,
-              ]}
-              onPress={() => setSelectedNewsIndex(index)}
+              ref={hornButtonRef}
+              style={styles.hornButton}
+              onPress={handleButtonPress}
             >
-              <Text style={styles.squareText}>{index + 1}</Text>
+              <Text style={styles.hornText}>📢</Text>
             </TouchableOpacity>
-          ))}
+
+            {overlayVisible && (
+              <View
+                style={[
+                  styles.overlay,
+                  {
+                    top: overlayPosition.y,
+                    left: overlayPosition.x,
+                  },
+                ]}
+              >
+                <Image source={MyImage} style={styles.overlayImage} />
+              </View>
+            )}
+          </View>
+          <Text style={styles.simpleText}>{truncateText(intro, 100)}</Text>
+          <HTMLView
+            style={styles.whiteText}
+            value={`<p>${truncateText(title, 100)}</p>`}
+            stylesheet={htmlStyles}
+          />
+          <View style={styles.squareRow}>
+            {newsData.map((_, index) => (
+              <TouchableOpacity
+                key={index}
+                style={[
+                  styles.square,
+                  selectedNewsIndex === index && styles.activeSquare,
+                ]}
+                onPress={() => setSelectedNewsIndex(index)}
+              >
+                <Text style={styles.squareText}>{index + 1}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
         </View>
-      </View>
+      </ImageBackground>
+
+      {/* CustomTextWithUnderline outside everything */}
       <CustomTextWithUnderline />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  // Styles remain unchanged
   outerContainer: {
     flex: 1,
-    backgroundColor: "#608d77",
     marginBottom: 20,
   },
-  container: { justifyContent: "center", alignItems: "center" },
-  hornButton: {
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    padding: 10,
-    borderRadius: 20,
-  },
-  hornText: { color: "#fff", fontSize: 16 },
-
   overlay: {
-    position: "absolute",
-    width: 300,
-    height: 480,
-    backgroundColor: "rgba(255, 255, 255, 1)",
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 10,
-    zIndex: 9999,
-    elevation: 10,
+    flex: 1,
+    backgroundColor: "rgba(98, 143, 111, 0.9)",
   },
-  overlayImage: {
-    width: "85%",
-    height: "85%",
-    borderRadius: 10,
-    zIndex: 9999,
-    margin: 10,
-  },
-
   imageContainer: {
     marginTop: 32,
     marginHorizontal: 16,
@@ -228,14 +212,10 @@ const styles = StyleSheet.create({
     marginTop: 42,
     maxWidth: "100%",
   },
-  dateText: {
-    color: "#ECBC55",
-    fontSize: 22,
-    marginLeft: 16,
-    marginTop: 42,
-  },
   squareRow: {
     flexDirection: "row",
+    justifyContent: "center", // Center horizontally
+    alignItems: "center", // Center vertically
     marginHorizontal: 16,
     marginTop: 10,
   },
@@ -243,17 +223,17 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     marginHorizontal: 5,
-    backgroundColor: "#ccc",
-    borderRadius: 10,
+    backgroundColor: "rgba(204, 204, 204, 0.5)", // 90% opacity
+    borderRadius: 5,
     justifyContent: "center",
     alignItems: "center",
     marginVertical: 36,
   },
   activeSquare: {
-    backgroundColor: "#ECBC55", // Highlight active square
+    backgroundColor: "rgba(184 , 155 , 94, 0.9)", // 90% opacity
   },
   squareText: {
-    color: "#000",
+    color: "white",
     fontSize: 18,
   },
   loaderContainer: {
