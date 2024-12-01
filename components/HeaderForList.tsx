@@ -8,8 +8,8 @@ import {
   Dimensions,
   ActivityIndicator,
   UIManager,
-  ImageBackground,
   Platform,
+  ImageBackground,
 } from "react-native";
 import HTMLView from "react-native-htmlview";
 import CustomTextWithUnderline from "./CustomTextWithUnderline";
@@ -106,13 +106,12 @@ const HeaderForList = () => {
     : "https://via.placeholder.com/300x200.png?text=No+Image+Available";
 
   return (
-    <View style={{ flex: 1 }}>
-      {/* Background Image with overlay content */}
+    <View>
       <ImageBackground
-        source={require("../assets/images/swiper-bg.png")} // Adjust the path to your image
+        source={require("../assets/images/swiper-bg.png")}
         style={styles.outerContainer}
       >
-        <View style={styles.overlay}>
+        <View style={styles.outerContainer}>
           <View style={styles.imageContainer}>
             <Image source={{ uri: imageUrl }} style={styles.image} />
             <TouchableOpacity
@@ -120,7 +119,10 @@ const HeaderForList = () => {
               style={styles.hornButton}
               onPress={handleButtonPress}
             >
-              <Text style={styles.hornText}>📢</Text>
+              <Image
+                source={require("../assets/images/horn-white.png")}
+                style={styles.hornIcon}
+              />
             </TouchableOpacity>
 
             {overlayVisible && (
@@ -160,7 +162,6 @@ const HeaderForList = () => {
         </View>
       </ImageBackground>
 
-      {/* CustomTextWithUnderline outside everything */}
       <CustomTextWithUnderline />
     </View>
   );
@@ -169,12 +170,35 @@ const HeaderForList = () => {
 const styles = StyleSheet.create({
   outerContainer: {
     flex: 1,
-    marginBottom: 20,
-  },
-  overlay: {
-    flex: 1,
     backgroundColor: "rgba(98, 143, 111, 0.9)",
   },
+  container: { justifyContent: "center", alignItems: "center" },
+  hornButton: {
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    padding: 10,
+    borderRadius: 20,
+  },
+  hornText: { color: "#fff", fontSize: 16 },
+
+  overlay: {
+    position: "absolute",
+    width: 300,
+    height: 480,
+    backgroundColor: "rgba(255, 255, 255, 1)",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 10,
+    zIndex: 9999,
+    elevation: 10,
+  },
+  overlayImage: {
+    width: "85%",
+    height: "85%",
+    borderRadius: 10,
+    zIndex: 9999,
+    margin: 10,
+  },
+
   imageContainer: {
     marginTop: 32,
     marginHorizontal: 16,
@@ -212,6 +236,18 @@ const styles = StyleSheet.create({
     marginTop: 42,
     maxWidth: "100%",
   },
+  dateText: {
+    color: "#ECBC55",
+    fontSize: 22,
+    marginLeft: 16,
+    marginTop: 42,
+  },
+  hornIcon: {
+    width: 24,
+    height: 24,
+    resizeMode: "contain",
+  },
+
   squareRow: {
     flexDirection: "row",
     justifyContent: "center", // Center horizontally
@@ -223,14 +259,14 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     marginHorizontal: 5,
-    backgroundColor: "rgba(204, 204, 204, 0.5)", // 90% opacity
-    borderRadius: 5,
+    backgroundColor: "rgba(204, 204, 204, 0.7)", // 90% opacity
+    borderRadius: 10,
     justifyContent: "center",
     alignItems: "center",
     marginVertical: 36,
   },
   activeSquare: {
-    backgroundColor: "rgba(184 , 155 , 94, 0.9)", // 90% opacity
+    backgroundColor: "rgba(236, 188, 85, 0.7)",
   },
   squareText: {
     color: "white",
