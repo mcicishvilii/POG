@@ -139,7 +139,9 @@ const HeaderForList = () => {
               </View>
             )}
           </View>
-          <Text style={styles.simpleText}>{truncateText(intro, 100)}</Text>
+          <Text style={styles.simpleText} numberOfLines={3}>
+            {truncateText(intro, 70)}
+          </Text>
           <HTMLView
             style={styles.whiteText}
             value={`<p>${truncateText(title, 100)}</p>`}
@@ -173,12 +175,6 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(98, 143, 111, 0.9)",
   },
   container: { justifyContent: "center", alignItems: "center" },
-  hornButton: {
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    padding: 10,
-    borderRadius: 20,
-  },
-  hornText: { color: "#fff", fontSize: 16 },
 
   overlay: {
     position: "absolute",
