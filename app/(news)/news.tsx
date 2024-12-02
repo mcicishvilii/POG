@@ -24,7 +24,7 @@ export default function NewsFeedScreen() {
   const { searchQuery } = useLocalSearchParams();
   const [newsItems, setNewsItems] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedLanguage, setSelectedLanguage] = useState("en");
+  const [selectedLanguage, setSelectedLanguage] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const { isOpen, setIsOpen } = useDrawer();
   const [totalPages, setTotalPages] = useState(0);
@@ -42,14 +42,12 @@ export default function NewsFeedScreen() {
   const fetchSelectedLanguage = async () => {
     try {
       const storedLanguage = await AsyncStorage.getItem("selectedLanguage");
-      console.log("storedLanguage", storedLanguage);
-      console.log(storedLanguage);
-      if (storedLanguage) {
-        setSelectedLanguage(storedLanguage);
-        i18n.changeLanguage(storedLanguage);
-      }
+      const language = storedLanguage || "ge"; // Default to "ge"
+      setSelectedLanguage(language);
+      i18n.changeLanguage(language);
     } catch (error) {
       console.error("Failed to fetch selected language:", error);
+      setSelectedLanguage("ge"); // Fallback to default
     }
   };
   useEffect(() => {
@@ -61,6 +59,8 @@ export default function NewsFeedScreen() {
   };
 
   const fetchNews = async (page = 1) => {
+    if (!selectedLanguage) return; // Wait until the language is loaded
+
     try {
       setLoading(true);
 
@@ -82,14 +82,23 @@ export default function NewsFeedScreen() {
   };
 
   useEffect(() => {
-    setCurrentPage(1);
-    fetchNews(1);
+    // Load the language first
+    fetchSelectedLanguage();
+  }, []);
+
+  useEffect(() => {
+    // Fetch news only when the language is ready
+    if (selectedLanguage) {
+      setCurrentPage(1); // Reset page to 1 when language changes
+      fetchNews(1);
+    }
   }, [selectedLanguage]);
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
     fetchNews(page);
   };
+
   useEffect(() => {
     console.log("xdeba");
     if (!isOpen) {
