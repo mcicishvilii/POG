@@ -151,7 +151,6 @@ const styles = StyleSheet.create({
   iconRow: {
     flexDirection: "row",
     justifyContent: "center",
-    paddingBottom: 30,
   },
   icon: {
     width: 41,
